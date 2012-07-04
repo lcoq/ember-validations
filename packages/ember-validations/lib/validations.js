@@ -1,0 +1,1 @@
+Ember.Validations = Ember.Mixin.create();

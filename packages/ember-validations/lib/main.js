@@ -1,0 +1,1 @@
+require("ember-validations/validations");
