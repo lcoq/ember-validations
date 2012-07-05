@@ -13,3 +13,11 @@ task :dist do
   pipeline.invoke
   puts "Done"
 end
+
+desc "Clean build artifacts from previous builds"
+task :clean do
+  puts "Cleaning build..."
+  rm_rf "dist" # Make sure even things RakeP doesn't know about are cleaned
+  puts "Done"
+end
+
