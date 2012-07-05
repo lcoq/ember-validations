@@ -39,7 +39,7 @@ class JSHintRC < Rake::Pipeline::Filter
 end
 
 distros = {
-  full: %w(ember-validations)
+  :full => %w(ember-validations)
 }
 
 output "dist"
@@ -48,7 +48,7 @@ input "packages" do
   output "tests"
 
   match "*/tests/**/*.js" do
-    minispade rewrite_requires: true, string: true, module_id_generactor: proc { |input|
+    minispade :rewrite_requires => true, :string => true, :module_id_generator => proc { |input|
       id = input.path.dup
       id.sub!(/\.js$/, '')
       id.sub!(/\/main$/, '')
@@ -66,11 +66,11 @@ end
 
 input "packages" do
   match "*/lib/**/*.js" do
-    minispade rewrite_requires: true, string: true, module_id_generactor: proc { |input|
+    minispade :rewrite_requires => true, :string => true, :module_id_generator => proc { |input|
       id = input.path.dup
       id.sub!('/lib/', '/')
-      id.sub!('/\.js$/', '')
-      id.sub!('/tests', '/~tests')
+      id.sub!(/\.js$/, '')
+      id.sub!(/\/main$/, '')
       id
     }
 
