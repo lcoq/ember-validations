@@ -1,3 +1,4 @@
 tmp/
 dist/
 tests/ember-validations-tests.js
+.autotest
