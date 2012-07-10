@@ -112,21 +112,17 @@ page.open(phantom.args[0], function(status){
         var failedContent = counts.match(new RegExp("([0-9]+) failed.$"));
         var failedCount = 1; // set to 1 for return error
           if (failedContent && failedContent.length) {
-              failedContent = failedContent[0];
               failedCount = failedContent[1];
+              failedContent = failedContent[0];
               counts = counts.replace(failedContent, "");
               failedContent = failedContent.substring(0, failedContent.length-1);
               counts += "\033[31m" + failedContent + "\033[0m.";
           }
           console.log(counts);
 
-        try {
-          return el.getElementsByClassName('fail')[0].innerHTML;
-        } catch (e) { }
-
           return parseInt(failedCount);
       });
-      phantom.exit((parseInt(failedNum, 1) > 0) ? 1 : 0);
+      phantom.exit((parseInt(failedNum) > 0) ? 1 : 0);
     });
   }
 });
