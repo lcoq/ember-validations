@@ -19,6 +19,8 @@ desc "Clean build artifacts from previous builds"
 task :clean do
   puts "Cleaning build..."
   rm_rf "dist" # Make sure even things RakeP doesn't know about are cleaned
+  rm_rf "tests/ember-validation-tests.js"
+  rm_rf "tmp"
   puts "Done"
 end
 
