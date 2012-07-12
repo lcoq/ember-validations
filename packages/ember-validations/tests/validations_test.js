@@ -4,18 +4,16 @@ module("Ember.Validations",{
         model = modelClass.create({
             validations: {
                 name: {
-                    custom: {
-                        validator: Ember.Validator.extend({
-                            validate: function(obj, attr, val) {
-                                if (!val) {
-                                    obj.get('errors').add(attr, "is empty");
-                                }
+                    customPresence: {
+                        validator: function(obj, attr, val) {
+                            if (!val) {
+                                obj.get('errors').add(attr, "is empty");
                             }
-                        })
+                        }
                     }
                 }
             }
-        });
+        })
     },
     teardown: function() {
         delete modelClass;
