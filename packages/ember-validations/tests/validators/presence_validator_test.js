@@ -1,16 +1,17 @@
-module("Ember.Validators.PresenceValidator", {
+var model, validator, moduleOpts = {
     setup: function() {
         model = Ember.Object.create({errors: Ember.ValidationErrors.create()});
         validator = Ember.Validators.PresenceValidator.create();
     },
     teardown: function() {
-        delete model;
-        delete validator;
+        model = null;
+        validator = null;
     }
-});
+};
+module("Ember.Validators.PresenceValidator", moduleOpts);
 
 test("should add error when the attribute is not present", function() {
-    invalidValues = [undefined, null, '', ' '];
+    var invalidValues = [undefined, null, '', ' '];
     invalidValues.forEach(function(val, index) {
         model.set('errors', Ember.ValidationErrors.create());
         validator.validate(model, 'name', val);

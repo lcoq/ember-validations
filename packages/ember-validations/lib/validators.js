@@ -8,7 +8,7 @@ Ember.Validators = Ember.Namespace.create({
         var validator = null;
         var validatorOptions = options;
 
-        if (jQuery.isPlainObject(options)) {
+        if (typeof options === 'object') {
             /* Check if a custom validator is specified in options */
             if (options['validator']) {
                 if (Ember.Validator.detect(options['validator'])) {

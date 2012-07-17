@@ -1,11 +1,12 @@
-module("Ember.ValidationErrors", {
+var errors, moduleOpts = {
     setup: function() {
         errors = Ember.ValidationErrors.create();
     },
     teardown: function() {
-        delete errors;
+        errors = null;
     }
-});
+};
+module("Ember.ValidationErrors", moduleOpts);
 
 test("should be initialized with 'messages' property", function() {
     deepEqual(errors.get('messages'), Ember.Object.create(), "should initialize 'messages' property");
@@ -30,4 +31,4 @@ test("#clear should clear all messages", function() {
     errors.clear();
     equal(errors.getPath('messages.name'), undefined);
     equal(errors.getPath('messages.foo'), undefined);
-})
+});

@@ -10,11 +10,11 @@ module("Ember.Validators.getValidator", {
 // validator errors
 
 test("should raise an exception if there is no options and no matching validator", function() {
-    raises(function() { Ember.Validators.getValidator('inexistent') }, /Validator not found for name \'inexistent\'./);
+    raises(function() { Ember.Validators.getValidator('inexistent'); }, /Validator not found for name \'inexistent\'./);
 });
 
 test("should raise an exception if options are empty and there is no matching validator", function() {
-    raises(function() { Ember.Validators.getValidator('inexistent', {validator: null}) }, /Validator not found for name \'inexistent\'./);
+    raises(function() { Ember.Validators.getValidator('inexistent', {validator: null}); }, /Validator not found for name \'inexistent\'./);
 });
 
 // custom validator class
@@ -31,7 +31,7 @@ test("should instantiate validator from options when set", function() {
 
 test("should create validator with validate method from options when set", function() {
     var validate = function() {};
-    var validator = Ember.Validators.getValidator('foo', {validator: validate, options: {opt: 'yes'}})
+    var validator = Ember.Validators.getValidator('foo', {validator: validate, options: {opt: 'yes'}});
 
     ok(Ember.Validator.detectInstance(validator), "should be an instance of Validator");
     equal(validator.get('validate'), validate, "should set validate method from options");

@@ -1,4 +1,4 @@
-module("Ember.Validations",{
+var modelClass, model, moduleOpts = {
     setup: function() {
         modelClass = Ember.Object.extend(Ember.Validations);
         model = modelClass.create({
@@ -13,13 +13,14 @@ module("Ember.Validations",{
                     }
                 }
             }
-        })
+        });
     },
     teardown: function() {
-        delete modelClass;
-        delete model;
+        modelClass = null;
+        model = null;
     }
-});
+};
+module("Ember.Validations",moduleOpts);
 
 test("should set 'error' property", function() {
     ok(Ember.ValidationErrors.detectInstance(model.get('errors')), "'error' property should be an Ember.ValidationErrors");
