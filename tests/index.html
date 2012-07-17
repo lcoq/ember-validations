@@ -9,6 +9,30 @@
   <script type="text/javascript" src="../lib/jquery-1.7.2.js"></script>
   <script type="text/javascript" src="../lib/ember.js"></script>
   <script type="text/javascript">
+
+    // Handle JSHint
+    QUnit.config.urlConfig.push('nojshint');
+
+    var jsHint = !QUnit.urlParams.nojshint;
+
+    var jsHintReporter = function (file, errors) {
+      if (!errors) { return ''; }
+
+      var len = errors.length,
+          str = '',
+          error, idx;;
+
+      if (len === 0) { return ''; }
+
+      for (idx=0; idx<len; idx++) {
+        error = errors[idx];
+        str += file  + ': line ' + error.line + ', col ' +
+            error.character + ', ' + error.reason + '\n';
+      };
+
+      return str + "\n" + len + ' error' + ((len === 1) ? '' : 's');
+    }
+
     window.ENV = window.ENV || {};
 
     // Handle extending prototypes
@@ -37,6 +61,12 @@
   <h2 id="qunit-userAgent"></h2>
   <ol id="qunit-tests"></ol>
   <div id="qunit-fixture">test markup</div>
+
+  <script type="text/javascript">
+    if (jsHint) {
+      document.write('<script src="jshint.js"><\/script>');
+    }
+  </script>
 
   <script type="text/javascript">
     // Load ember distribution from query vars
@@ -104,8 +134,21 @@
           if (!minispade.modules.hasOwnProperty(moduleName)) { continue; }
 
           match = moduleName.match(re);
-          if (match && match[1] === '~tests') {
-            minispade.require(moduleName);
+          if (match) {
+            if (match[1] === '~tests') {
+              minispade.require(moduleName);
+            }
+            if (jsHint) {
+              (function() {
+                var jshintModule = moduleName;
+                module(jshintModule);
+                test('should pass jshint', function() {
+                  var passed = JSHINT(minispade.modules[jshintModule], JSHINTRC),
+                      errors = jsHintReporter(jshintModule, JSHINT.errors);
+                  ok(passed, jshintModule+" should pass jshint."+(errors ? "\n"+errors : ''));
+                });
+              })();
+            }
           }
         }
       }
