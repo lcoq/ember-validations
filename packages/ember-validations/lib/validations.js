@@ -57,6 +57,7 @@
 
  */
 Ember.Validations = Ember.Mixin.create({
+
     init: function() {
         this._super();
         if (this.get('errors') === undefined) {
@@ -64,6 +65,12 @@ Ember.Validations = Ember.Mixin.create({
         }
     },
 
+    /**
+       Method used to verify that the object is valid, according to the `validations`
+       hash.
+
+       @returns {Boolean}
+     */
     validate: function() {
         var validations = this.get('validations');
         var isValid = true;
