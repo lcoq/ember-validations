@@ -42,3 +42,12 @@ test("#validate should set 'isValid' property to true when valid", function() {
     model.validate();
     equal(model.get('isValid'), true, "should set 'isValid' to true");
 });
+
+test("#validate should return false when invalid", function() {
+    equal(model.validate(), false, "should return false");
+});
+
+test("#validate should return true when valid", function() {
+    model.set('name', 'ember');
+    equal(model.validate(), true, "should return true");
+});

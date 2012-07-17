@@ -84,5 +84,6 @@ Ember.Validations = Ember.Mixin.create({
             }
         }
         this.set('isValid', isValid);
+        return isValid;
     }
 });
