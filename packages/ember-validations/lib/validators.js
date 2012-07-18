@@ -1,8 +1,32 @@
-Ember.Validators = Ember.Namespace.create({
+/**
+   @namespace
+
+   This namespace is used to reference each available class which extends `Ember.Validator`.
+
+   By defining a validator in this namespace allow validations to use it by its name.
+   Each validator name should end with 'Validator', and has to be capitalized.
+
+   For example, if you want to use the `App.Validators.PresenceValidator` in validations,
+   you could only specify :
+
+       Ember.Object.create(Ember.Validations, {
+         validations: {
+           presence: true
+         }
+       });
+
+   The `PresenceValidator` will automatically be found if defined in this namespace.
+
+ */
+Ember.Validators = Ember.Namespace.create(/**@scope Ember.Validators */{
 
 
     /**
        Return validator depending on name and options passed as arguments.
+
+       @param name {string}
+       @param options {object}
+       @returns {Ember.Validator}
     */
     getValidator: function(name, options) {
         var validator = null;
