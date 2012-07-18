@@ -11,7 +11,7 @@ var model, validator, moduleOpts = {
 module("Ember.Validators.PresenceValidator", moduleOpts);
 
 test("should add error when the attribute is not present", function() {
-    var invalidValues = [undefined, null, '', ' '];
+    var invalidValues = [undefined, null, '', ' ', '  '];
     invalidValues.forEach(function(val, index) {
         model.set('errors', Ember.ValidationErrors.create());
         validator.validate(model, 'name', val);
