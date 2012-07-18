@@ -24,8 +24,8 @@ Ember.Validators = Ember.Namespace.create(/**@scope Ember.Validators */{
     /**
        Return validator depending on name and options passed as arguments.
 
-       @param name {string}
-       @param options {object}
+       @param name {String}
+       @param options {Object}
        @returns {Ember.Validator}
     */
     getValidator: function(name, options) {

@@ -34,6 +34,17 @@ namespace :docs do
     require "ember_docs/cli"
     EmberDocs::CLI.start("preview #{doc_args}".split(' '))
   end
+
+  desc "Build Ember Docs"
+  task :build do
+    require "ember_docs/cli"
+    EmberDocs::CLI.start("generate #{doc_args} -o docs".split(' '))
+  end
+
+  desc "Remove Ember Docs"
+  task :clean do
+    rm_r "docs"
+  end
 end
 
 desc "Run tests with phantomjs"
