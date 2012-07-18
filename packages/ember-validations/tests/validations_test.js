@@ -1,53 +1,53 @@
 var modelClass, model, moduleOpts = {
-    setup: function() {
-        modelClass = Ember.Object.extend(Ember.Validations);
-        model = modelClass.create({
-            validations: {
-                name: {
-                    customPresence: {
-                        validator: function(obj, attr, val) {
-                            if (!val) {
-                                obj.get('errors').add(attr, "is empty");
-                            }
-                        }
-                    }
-                }
+  setup: function() {
+    modelClass = Ember.Object.extend(Ember.Validations);
+    model = modelClass.create({
+      validations: {
+        name: {
+          customPresence: {
+            validator: function(obj, attr, val) {
+              if (!val) {
+                obj.get('errors').add(attr, "is empty");
+              }
             }
-        });
-    },
-    teardown: function() {
-        modelClass = null;
-        model = null;
-    }
+          }
+        }
+      }
+    });
+  },
+  teardown: function() {
+    modelClass = null;
+    model = null;
+  }
 };
 module("Ember.Validations",moduleOpts);
 
 test("should set 'error' property", function() {
-    ok(Ember.ValidationErrors.detectInstance(model.get('errors')), "'error' property should be an Ember.ValidationErrors");
+  ok(Ember.ValidationErrors.detectInstance(model.get('errors')), "'error' property should be an Ember.ValidationErrors");
 });
 
 test("#validate should call #validate validator method", function() {
-    model.validate();
-    var nameErrors = model.getPath('errors.messages.name');
-    deepEqual(nameErrors, ["is empty"], "should call #validate validator method");
+  model.validate();
+  var nameErrors = model.getPath('errors.messages.name');
+  deepEqual(nameErrors, ["is empty"], "should call #validate validator method");
 });
 
 test("#validate should set 'isValid' property to false when invalid", function() {
-    model.validate();
-    equal(model.get('isValid'), false, "should set 'isValid' to false");
+  model.validate();
+  equal(model.get('isValid'), false, "should set 'isValid' to false");
 });
 
 test("#validate should set 'isValid' property to true when valid", function() {
-    model.set('name', 'ember');
-    model.validate();
-    equal(model.get('isValid'), true, "should set 'isValid' to true");
+  model.set('name', 'ember');
+  model.validate();
+  equal(model.get('isValid'), true, "should set 'isValid' to true");
 });
 
 test("#validate should return false when invalid", function() {
-    equal(model.validate(), false, "should return false");
+  equal(model.validate(), false, "should return false");
 });
 
 test("#validate should return true when valid", function() {
-    model.set('name', 'ember');
-    equal(model.validate(), true, "should return true");
+  model.set('name', 'ember');
+  equal(model.validate(), true, "should return true");
 });
