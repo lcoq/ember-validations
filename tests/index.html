@@ -7,7 +7,6 @@
   <script type="text/javascript" src="qunit/qunit.js"></script>
   <script type="text/javascript" src="minispade.js"></script>
   <script type="text/javascript" src="../lib/jquery-1.7.2.js"></script>
-  <script type="text/javascript" src="../lib/ember.js"></script>
   <script type="text/javascript">
 
     // Handle JSHint
@@ -52,6 +51,8 @@
 
     var noViewPreservesContext = QUnit.urlParams.noviewpreservescontext;
     ENV['VIEW_PRESERVES_CONTEXT'] = !noViewPreservesContext;
+
+    ENV['TESTING'] = true
 </script>
 </head>
 <body>
@@ -66,6 +67,10 @@
     if (jsHint) {
       document.write('<script src="jshint.js"><\/script>');
     }
+  </script>
+
+  <script type="text/javascript">
+    document.write(unescape('%3Cscript src="../dist/modules/ember.js"%3E%3C/script%3E'));
   </script>
 
   <script type="text/javascript">
