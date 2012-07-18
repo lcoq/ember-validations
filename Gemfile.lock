@@ -1,4 +1,12 @@
 GIT
+  remote: https://github.com/emberjs/docs-generator.git
+  revision: cfbc2a3aabc08de305224b290ad8f37f3ef5f847
+  specs:
+    ember-docs (0.1)
+      rack
+      thor
+
+GIT
   remote: https://github.com/livingsocial/rake-pipeline.git
   revision: 543f4322fe70facee9572d29ddabf7f090dad68a
   specs:
@@ -33,6 +41,7 @@ PLATFORMS
 
 DEPENDENCIES
   colored
+  ember-docs!
   rake-pipeline!
   rake-pipeline-web-filters!
   uglifier (~> 1.0.3)

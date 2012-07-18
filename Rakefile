@@ -24,6 +24,18 @@ task :clean do
   puts "Done"
 end
 
+namespace :docs do
+  def doc_args
+    "#{Dir.glob("packages/ember-*").join(' ')} -E #{Dir.glob("packages/ember-*/tests").join(' ')} -t docs.emberjs.com"
+  end
+
+  desc "Preview Ember Docs (does not auto update)"
+  task :preview do
+    require "ember_docs/cli"
+    EmberDocs::CLI.start("preview #{doc_args}".split(' '))
+  end
+end
+
 desc "Run tests with phantomjs"
 task :test, [:suite] => :dist do |t, args|
   unless system("which phantomjs > /dev/null 2>&1")
