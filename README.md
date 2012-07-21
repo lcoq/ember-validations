@@ -53,10 +53,13 @@ MyApp.User = Ember.Object.extend(Ember.Validations, {
 
 // Later, you can call the 'validate' method to launch all properties validations.
 // It will add errors to the object if there are invalid properties.
-MyApp.oneUserInstance.validate();
-```
+var aUser = MyApp.User.create();
+aUser.validate();
 
-After calling the `validate` method, properties `isValid` and `isInvalid` are set to true/false depending on the result of the validations.
+// Now, properties 'isValid' and 'isInvalid' are available
+aUser.get('isValid') // false
+aUser.get('isInvalid') // true, as expected(!)
+```
 
 ## Errors
 
