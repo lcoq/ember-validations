@@ -61,7 +61,7 @@ MyApp.User = Ember.Object.extend(Ember.Validations, {
     // the next validation use a on-the-fly validator (corresponding to the `validate` method of an Ember.Validator)
     password: {
       validator: function(object, attribute, value) {
-        if (!value.match(/[A-Z])) {
+        if (!value.match(/[A-Z]/)) {
           this.get('errors').add(attribute, "does not contain capital letters");
         }
       }
