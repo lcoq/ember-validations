@@ -56,6 +56,20 @@ MyApp.User = Ember.Object.extend(Ember.Validations, {
 MyApp.oneUserInstance.validate();
 ```
 
+After calling the `validate` method, properties `isValid` and `isInvalid` are set to true/false depending on the result of the validations.
+
+## Errors
+
+Once the `validate` method is called, if some properties are invalid, the object property `errors` is updated.
+You can get the message error on each invalid property, as follow :
+
+``` javascript
+// Given an error due to the absence of the 'name' property :
+myUser.getPath('errors.messages.name');
+// "can't be blank"
+```
+
+NOTE: This behaviour will change in next versions. Errors messages will be available at `errors.my.property.path.messages`.
 
 # Building Ember-Validations
 
