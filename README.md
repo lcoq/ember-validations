@@ -19,7 +19,6 @@ Currently you must build ember-validations yourself. Clone the repository, run `
 * Handle nested object validations
 * One-property validation
 * Automatic validation option
-* Several custom validators on one property
 
 
 ## Validations
@@ -51,18 +50,23 @@ MyApp.User = Ember.Object.extend(Ember.Validations, {
     },
 
     // the next validation use a custom validator (that extends Ember.Validator)
+    // 'custom' is an arbitrary name for the validation
     email: {
-      validator: MyApp.EmailValidator,
-      options: {
-        domain: 'gmail'
+      custom: {
+        validator: MyApp.EmailValidator,
+        options: {
+          domain: 'gmail'
+        }
       }
     },
 
     // the next validation use a on-the-fly validator (corresponding to the `validate` method of an Ember.Validator)
     password: {
-      validator: function(object, attribute, value) {
-        if (!value.match(/[A-Z]/)) {
-          this.get('errors').add(attribute, "does not contain capital letters");
+      custom: {
+        validator: function(object, attribute, value) {
+          if (!value.match(/[A-Z]/)) {
+            this.get('errors').add(attribute, "does not contain capital letters");
+          }
         }
       }
     }
