@@ -1,8 +1,8 @@
 
 # Ember Validations
 
-Ember-validations is a Ember.js library that can handle object validations. If you have to check the validity of the properties of an object, 
-this library does it for you. You just have to declare which property you want to validate, and which kind of validation are needed for this property.
+Ember-validations is a Ember.js library that can handle object validations. If you have to check the validity of object properties, 
+this library does it for you. You just have to declare which property you want to validate, and which kind of validation you want for this property.
 
 This library is inspired by the validations of the Ruby gem `ActiveRecord`.
 
