@@ -30,10 +30,12 @@ Ember.Validator = Ember.Object.extend(/**@scope Ember.Validator.prototype */{
   /**
      Abstract method used to validate the attribute of an object.
 
-     @param {Object} The object which contains the attribute that has to be validated
-     @param {String} The attribute path on which the validation should be done
-     @param {Object} The value of the attribute
-
+     @param {Object} object
+      The object which contains the attribute that has to be validated
+     @param {String} attribute
+      The attribute path on which the validation should be done
+     @param {Object} value
+      The value of the attribute
   */
   validate: function(obj, attr, value) {
     throw new Error("Ember.Validator subclasses should implement validate() method.");
