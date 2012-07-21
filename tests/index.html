@@ -112,7 +112,7 @@
 
 
     // Load Tests and Depenencies
-    var packages = (QUnit.urlParams.package || "").split(","),
+    var packages = (QUnit.urlParams.package || "all").split(","),
         packageName, el, idx, len, re, match, moduleName;
 
     if (!packages.length) {
