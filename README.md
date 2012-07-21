@@ -6,6 +6,21 @@ this library does it for you. You just have to declare which property you want t
 
 This library is inspired by the validations of the Ruby gem `ActiveRecord`.
 
+#### Is it "Production Ready"?
+
+No. The development has just started.
+
+#### Getting ember-validations
+
+Currently you must build ember-validations yourself. Clone the repository, run `bundle` then `rake dist`. You'll find ember-validations.js in the `dist` directory.
+
+#### Roadmap
+
+* Handle nested object validations
+* One-property validation
+* Automatic validation option
+
+
 ## Validations
 
 Use validations to check the properties validity on an object.
@@ -40,3 +55,55 @@ MyApp.User = Ember.Object.extend(Ember.Validations, {
 // It will add errors to the object if there are invalid properties.
 MyApp.oneUserInstance.validate();
 ```
+
+
+# Building Ember-Validations
+
+1. Run `rake dist` task to build Ember-validations.js. Two builds will be placed in the `dist/` directory.
+  * `ember-validations.js` is a unminified version (generally used for development)
+  * `ember-validations.min.js` is the minified version, production ready
+
+If you are building under Linux, you will need a JavaScript runtime for
+minification. You can either install nodejs or `gem install
+therubyracer`.
+
+
+# How to run Unit Tests
+
+## Setup
+
+1. Install Ruby 1.9.2+. There are many resources on the web can help; one of the best is [rvm](https://rvm.io/).
+
+2. Install Bundler: `gem install bundler`
+
+3. Run `bundle` inside the project root to install the gem dependencies.
+
+## In Your Browser
+
+1. To start the development server, run `rackup`.
+
+2. Then visit: `http://localhost:9292/tests/index.html
+
+## From the CLI
+
+1. Install phantomjs from http://phantomjs.org
+
+2. Run `rake test` to run a basic test suite or run `rake test[all]` to
+   run a more comprehensive suite.
+
+
+# Build API Docs
+
+NOTE: Require `node.js` to generate it.
+
+## Preview API documentation
+
+* run `rake docs:preview`
+
+* The `docs:preview` task will build the documentation and make it available at <http://localhost:9292/index.html>
+
+## Build API documentation
+
+* run `rake docs:build`
+
+* HTML documentation is built in the `docs` directory
