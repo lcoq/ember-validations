@@ -37,10 +37,12 @@
        Ember.Object.create(Ember.Validations, {
          validations: {
            amount: {
-             validator: MyApp.CustomValidator,
-             options: {
-               isNumber: true,
-               otherOption: 12
+             aCustomValidation: {
+               validator: MyApp.CustomValidator,
+               options: {
+                 isNumber: true,
+                 otherOption: 12
+               }
              }
            }
          }
@@ -51,14 +53,16 @@
        Ember.Object.create(Ember.Validations, {
          validations: {
            amount: {
-             validator: function(obj, attr, value) {
-               var moreThan = this.getPath('options.moreThan');
-               if (value <= moreThan) {
-                 obj.get('errors').add(attr, "should not be falsy");
+             aCustomValidation: {
+               validator: function(obj, attr, value) {
+                 var moreThan = this.getPath('options.moreThan');
+                 if (value <= moreThan) {
+                   obj.get('errors').add(attr, "should not be falsy");
+                 }
+               },
+               options: {
+                 moreThan: 5
                }
-             },
-             options: {
-               moreThan: 5
              }
            }
          }
