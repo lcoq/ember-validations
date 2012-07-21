@@ -34,7 +34,9 @@ MyApp.User = Ember.Object.extend(Ember.Validations, {
   // all property validations are set in an object 'validations'
   validations: {
 
-    // the next validation is used to check the presence of the 'name' property
+    // the next validation is used to check the presence of the 'name' property.
+    // the library will automatically find the `Ember.Validator` called `PresenceValidator`
+    // in the namespace `Ember.Validators`
     name: {
       presence: true
     },
