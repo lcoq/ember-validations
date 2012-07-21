@@ -62,7 +62,8 @@ MyApp.User = Ember.Object.extend(Ember.Validations, {
       }
     },
 
-    // the next validation use a on-the-fly validator (corresponding to the `validate` method of an Ember.Validator)
+    // the next validation use a on-the-fly validator
+    // (corresponding to the `validate` method of an Ember.Validator)
     password: {
       custom: {
         validator: function(object, attribute, value) {
