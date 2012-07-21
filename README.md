@@ -12,7 +12,7 @@ No. The development has just started.
 
 #### Getting ember-validations
 
-Currently you must build ember-validations yourself. Clone the repository, run `bundle` then `rake dist`. You'll find ember-validations.js in the `dist` directory.
+Currently you must build ember-validations yourself. Clone the repository, run `bundle` then `rake dist`. You'll find `ember-validations.js` in the `dist` directory.
 
 #### Roadmap
 
@@ -91,6 +91,7 @@ therubyracer`.
 2. Run `rake test` to run a basic test suite or run `rake test[all]` to
    run a more comprehensive suite.
 
+NOTE: There is a QUnit-runner available at `tests/qunit/run-qunit.js`
 
 # Build API Docs
 
