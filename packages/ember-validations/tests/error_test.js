@@ -65,6 +65,14 @@ test("should return 'customMessage' property when set", function() {
   equal(error.get('message'), 'foo');
 });
 
+test("should not return 'customMessage' property when falsy", function() {
+  var messages = Ember.A([undefined, null, false]);
+  messages.forEach(function(value) {
+    error = Ember.ValidationError.create({customMessage: value, key: 'aKey'});
+    equal(error.get('message'), 'aMessage', "should return default message for customMessage '" + value +"'");
+  });
+});
+
 test("should return 'customMessage' when both customMessage and key are set", function() {
   error = Ember.ValidationError.create({customMessage: 'foo', key: 'aKey'});
   equal(error.get('message'), 'foo');

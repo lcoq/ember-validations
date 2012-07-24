@@ -7,47 +7,34 @@ Ember.ValidationErrors = Ember.Object.extend({
   },
 
   keys: Ember.computed(function() {
-    var keys = Ember.A(),
-        content = this.get('_content'),
-        errorProperties = this.get('_errorProperties'),
-        i = 0,
-        k = 0;
-
-    /* add direct content */
-    for (i = 0, k = content.length; i < k; i++) {
-      keys.push(["", content[i].get('key')]);
-    }
-
-    /* add error keys */
-    var errorProperties = this.get('_errorProperties');
-    errorProperties.forEach(function(errorProperty) {
-
-      var nestedKeys = this.get(errorProperty).get('keys');
-      nestedKeys.forEach(function(nestedKey, nestedKeyIndex) {
-
-        var nestedPath = errorProperty;
-        if (nestedKey[0] !== '') {
-          nestedPath += '.' + nestedKey[0];
-        }
-        nestedKeys[nestedKeyIndex] = [nestedPath, nestedKey[1]];
-      });
-
-      keys = keys.concat(nestedKeys);
-    }, this);
-
-    return keys;
+    return this._getErrorsData('key');
   }),
 
-  add: function(path, key) {
+  messages: Ember.computed(function() {
+    return this._getErrorsData('message');
+  }),
+
+  fullMessages: Ember.computed(function() {
+    var messages = this.get('messages'),
+        fullMessages = Ember.A();
+    messages.forEach(function(message) {
+      var fullMsg = (message[0] !== '') ? (message[0] + ' ') : '';
+      fullMsg += message[1];
+      fullMessages.push(fullMsg);
+    });
+    return fullMessages;
+  }),
+
+  add: function(path, key, customMessage) {
     var error;
     if (path === '') {
-      error = Ember.ValidationError.create({key: key});
+      error = Ember.ValidationError.create({key: key, customMessage: customMessage});
       this.get('_content').pushObject(error);
     } else {
       var splittedPath = Ember.A(path.split('.'));
       var firstPath = splittedPath[0];
       error = (this.get(firstPath)) ? this.get(firstPath) : Ember.ValidationErrors.create();
-      error.add(splittedPath.removeAt(0).join('.'), key);
+      error.add(splittedPath.removeAt(0).join('.'), key, customMessage);
       this.set(firstPath, error);
     }
   },
@@ -67,5 +54,29 @@ Ember.ValidationErrors = Ember.Object.extend({
       keys.push(prop);
     }
     return keys;
-  })
+  }),
+
+  _getErrorsData: function(dataName) {
+    var data = Ember.A(),
+        content = this.get('_content'),
+        props = this.get('_errorProperties');
+
+    for (var i = 0, k = content.length; i < k; i++) {
+      data.push(['', content[i].get(dataName)]);
+    }
+
+    props.forEach(function(prop) {
+      var nestedDataPath = prop + '.' + dataName + 's';
+      var nestedData = this.getPath(nestedDataPath);
+
+      nestedData.forEach(function(nestedD, index) {
+        var nestedPath = prop;
+        if (nestedD[0] !== '') nestedPath += '.' + nestedD[0];
+
+        nestedData[index][0] = nestedPath;
+      });
+      data = data.concat(nestedData);
+    }, this);
+    return Ember.A(data);
+  }
 });
