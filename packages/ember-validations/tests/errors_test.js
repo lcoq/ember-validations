@@ -172,7 +172,6 @@ test("messages should return both content errors & errors properties messages", 
     errors.add(path, content[path][0], content[path][1]);
     expected.push([path, content[path][1]]);
   }
-  console.log(errors.get('messages'));
   deepEqual(errors.get('messages'), expected);
 });
 
@@ -204,6 +203,5 @@ test("fullMessages should return both content errors & errors properties message
     errors.add(path, content[path][0], content[path][1]);
     expected.push(path + ' ' + content[path][1]);
   }
-  console.log(errors.get('messages'));
   deepEqual(errors.get('fullMessages'), expected);
 });
