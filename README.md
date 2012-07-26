@@ -99,7 +99,7 @@ You can get the message error on each invalid property, as follow :
 
 myUser.getPath('errors.name.messages'); // ["can't be blank"]
 myUser.getPath('errors.adress.zipCode.messages'); // ["should have between 5 and 10 characters"]
-myUser.getPath( errors.messages); // `undefined`, because there is no error at this path
+myUser.getPath('errors.messages'); // `undefined`, because there is no error at this path
 
 // Using `allMessages` property. Returns all errors, corresponding to the exact path and nested errors
 
@@ -107,9 +107,7 @@ myUser.getPath('errors.name.allMesssages');
 // [["", "can't be blank"]]
 
 myUser.getPath('errors.allMessages'); 
-// [["name", "can't be blank"], 
-// ["address.id", "should have between 5 and 10 characters"]]
-
+// [["name", "can't be blank"], ["address.id", "should have between 5 and 10 characters"]]
 ```
 
 There are also `keys`, `allKeys` properties that works like messages.
