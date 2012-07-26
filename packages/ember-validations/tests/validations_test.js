@@ -2,17 +2,23 @@ var modelClass, model, moduleOpts = {
   setup: function() {
     modelClass = Ember.Object.extend(Ember.Validations);
     model = modelClass.create({
+
       validations: {
+
         name: {
+
           customPresence: {
             validator: function(obj, attr, val) {
               if (!val) {
-                obj.get('errors').add(attr, "is empty");
+                obj.get('errors').add(attr, "isEmpty");
               }
             }
           }
+
         }
+
       }
+
     });
   },
   teardown: function() {
@@ -28,8 +34,8 @@ test("should set 'error' property", function() {
 
 test("#validate should call #validate validator method", function() {
   model.validate();
-  var nameErrors = model.getPath('errors.messages.name');
-  deepEqual(nameErrors, ["is empty"], "should call #validate validator method");
+  var nameErrorsKeys = model.getPath('errors.name.keys');
+  deepEqual(nameErrorsKeys, ["isEmpty"], "should call #validate validator method");
 });
 
 test("#validate should set 'isValid' property to false when invalid", function() {

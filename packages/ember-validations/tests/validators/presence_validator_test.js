@@ -16,14 +16,18 @@ test("should add error when the attribute is not present", function() {
     model.set('errors', Ember.ValidationErrors.create());
     validator.validate(model, 'name', val);
 
-    var errorMessage = model.getPath('errors.messages.name');
-    ok(errorMessage, "should set 'name' message for value: '" + val + "' (" + index + ")");
-    equal(errorMessage.length, 1, "should set one 'name' error message for value: '" + val + "' (" + index + ")");
-    equal(errorMessage[0], "can't be blank");
+    var errors = model.getPath('errors.name');
+
+    var errorKeys = errors.get('keys');
+    equal(errorKeys.length, 1, "has one error");
+    equal(errorKeys[0], "cantBeBlank", "has right key");
+
+    var errorMessage = errors.get('messages');
+    equal(errorMessage[0], "can't be blank", "has right message");
   });
 });
 
 test("should not add error when the attribute is present", function() {
   validator.validate(model, 'name', "my name");
-  equal(model.getPath('errors.messages.name'), undefined, "should not set 'name' error");
+  equal(model.getPath('errors.name.keys'), undefined, "should not set 'name' error");
 });
