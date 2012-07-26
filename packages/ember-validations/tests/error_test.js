@@ -1,7 +1,8 @@
 var get = Ember.get, set = Ember.set, VError = Ember.ValidationError;
 
-var error, count, incrementCount, moduleOpts = {
+var error, count, incrementCount, originalErrorMessages, moduleOpts = {
   setup: function() {
+    originalErrorMessages = Ember.ValidationError.messages;
     Ember.ValidationError.messages = {
       aKey: 'aMessage',
       anotherKey: 'a@{foo}Message'
@@ -10,7 +11,7 @@ var error, count, incrementCount, moduleOpts = {
     incrementCount = function() { count +=1 ;};
   },
   teardown: function() {
-    Ember.ValidationError.messages['aKey'] = undefined;
+    Ember.ValidationError.messages = originalErrorMessages;
     error = null;
     count = 0;
     incrementCount = null;

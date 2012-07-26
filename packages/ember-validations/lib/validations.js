@@ -1,3 +1,5 @@
+var get = Ember.get, getPath = Ember.getPath, set = Ember.set;
+
 /**
    @class
 
@@ -71,8 +73,8 @@ Ember.Validations = Ember.Mixin.create(/**@scope Ember.Validations.prototype */{
   /** @private */
   init: function() {
     this._super();
-    if (this.get('errors') === undefined) {
-      this.set('errors', Ember.ValidationErrors.create());
+    if (get(this, 'errors') === undefined) {
+      set(this, 'errors', Ember.ValidationErrors.create());
     }
   },
 
@@ -83,8 +85,7 @@ Ember.Validations = Ember.Mixin.create(/**@scope Ember.Validations.prototype */{
      @returns {Boolean}
   */
   validate: function() {
-    var validations = this.get('validations');
-    var isValid = true;
+    var validations = get(this, 'validations');
     for (var attribute in validations) {
       if (!validations.hasOwnProperty(attribute)) continue;
 
@@ -96,12 +97,9 @@ Ember.Validations = Ember.Mixin.create(/**@scope Ember.Validations.prototype */{
         var validator = Ember.Validators.getValidator(validationName, options);
         validator.validate(this, attribute, this.get(attribute));
       }
-      var attributeMessages = this.getPath('errors.messages.' + attribute);
-      if (attributeMessages && attributeMessages.length > 0) {
-        isValid = false;
-      }
     }
-    this.set('isValid', isValid);
+    var isValid = getPath(this, 'errors.length') === 0;
+    set(this, 'isValid', isValid);
     return isValid;
   }
 });
