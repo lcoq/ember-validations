@@ -50,6 +50,25 @@ Ember.ValidationErrors = Ember.Object.extend(/** @scope Ember.ValidationErrors.p
     return this._allErrorsData('messages');
   }).property('length').cacheable(),
 
+
+  /**
+      The array which contains formatted messages with path.
+
+      For eaxmple:
+
+          ["can't be blank", "address.city should have at least 3 characters"]
+
+      @property {Ember.Array}
+  */
+  fullMessages: Ember.computed(function() {
+    return get(this, 'allMessages').map(function(m) {
+      var msg = m[0];
+      if (m[0] !== '') msg += ' ';
+      msg += m[1];
+      return msg;
+    });
+  }).property('allMessages').cacheable(),
+
   /**
      The array which contains each direct error keys.
 
@@ -199,7 +218,7 @@ Ember.ValidationErrors = Ember.Object.extend(/** @scope Ember.ValidationErrors.p
   /** @private */
   _allErrorsData: function(dataName) {
     var directData = get(this, dataName),
-        data = [];
+        data = Ember.A();
     directData.forEach(function(singleData) { data.push(['', singleData]); });
 
     var nestedErrors = get(this, 'nestedErrors');

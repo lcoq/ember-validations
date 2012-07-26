@@ -122,3 +122,17 @@ test("get allMessages should return all messages (direct & nested)", function() 
   errors.add('address.city', 'lengthTooLong');
   deepEqual(get(errors, 'allMessages'), expected, "has 'lengthTooLong' message");
 });
+
+test("get fullMessages should return formatted messages", function() {
+  var expected = [MESSAGES['cantBeBlank']];
+  errors.add(null, 'cantBeBlank');
+  deepEqual(get(errors, 'fullMessages'), expected, "has 'cantBeBlank' message");
+
+  expected.push('name at least 5 chars');
+  errors.add('name', 'lengthTooShort', {length: 5});
+  deepEqual(get(errors, 'fullMessages'), expected, "has 'lengthTooShort' message");
+
+  expected.push('address.city at most 20 chars');
+  errors.add('address.city', 'lengthTooLong', {length: 20});
+  deepEqual(get(errors, 'fullMessages'), expected, "has 'lengthTooLong' message");
+});
