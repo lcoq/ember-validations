@@ -1,82 +1,171 @@
-Ember.ValidationErrors = Ember.Object.extend({
-  _content: null,
+var get = Ember.get, set = Ember.set;
 
+/**
+   @class
+
+   This class is responsible to handle a list of errors.
+   These errors are defined with a path (for example: `user.address.city`).
+
+ */
+Ember.ValidationErrors = Ember.Object.extend(/** @scope Ember.ValidationErrors.prototype */){
+  nestedErrors: null,
+  content: null,
+
+  /** @private */
   init: function() {
     this._super();
-    this.set('_content', Ember.A());
+    this._resetErrors();
   },
 
-  keys: Ember.computed(function() {
-    return this._getErrorsData('key');
-  }),
+  /**
+     The array which contains each error paths and keys.
 
-  messages: Ember.computed(function() {
-    return this._getErrorsData('message');
-  }),
+     A simple example :
 
-  fullMessages: Ember.computed(function() {
-    var messages = this.get('messages'),
-        fullMessages = Ember.A();
-    messages.forEach(function(message) {
-      var fullMsg = (message[0] !== '') ? (message[0] + ' ') : '';
-      fullMsg += message[1];
-      fullMessages.push(fullMsg);
-    });
-    return fullMessages;
-  }),
+         [['name', 'hasWrongLength'], ['address', 'cantBeBlank'], ['address.zipCode', 'isNaN'], ['address.city', 'cantBeBlank']]
 
-  add: function(path, key, customMessage) {
-    var error;
-    if (path === '') {
-      error = Ember.ValidationError.create({key: key, customMessage: customMessage});
-      this.get('_content').pushObject(error);
-    } else {
-      var splittedPath = Ember.A(path.split('.'));
-      var firstPath = splittedPath[0];
-      error = (this.get(firstPath)) ? this.get(firstPath) : Ember.ValidationErrors.create();
-      error.add(splittedPath.removeAt(0).join('.'), key, customMessage);
-      this.set(firstPath, error);
-    }
-  },
+     NOTE: If you get this property from a nested error (for example "errors.getPath('address.allKeys')",
+     there could be empty path.
 
-  clear: function() {
-    this.get('_content').clear();
-    var errorProperties = this.get('_errorProperties');
-    errorProperties.forEach(function(prop) {
-      this.set(prop, null);
-    }, this);
-  },
+     With the same example, based on "address.allKeys":
 
-  _errorProperties: Ember.computed(function() {
-    var keys = [];
-    for (var prop in this) {
-      if (!this.hasOwnProperty(prop) || prop.match(/^_/)) continue;
-      keys.push(prop);
-    }
-    return keys;
-  }),
+         [['', 'cantBeBlank'], ['zipCode', 'isNaN'], ['city', 'cantBeBlank']]
 
-  _getErrorsData: function(dataName) {
-    var data = Ember.A(),
-        content = this.get('_content'),
-        props = this.get('_errorProperties');
+     @property {Ember.Array}
+   */
+  allKeys: Ember.computed(function() {
+    var keys = get(this, 'keys'),
+        allKeys = [];
+    keys.forEach(function(key) { allKeys.push(['', key]); });
 
-    for (var i = 0, k = content.length; i < k; i++) {
-      data.push(['', content[i].get(dataName)]);
-    }
-
-    props.forEach(function(prop) {
-      var nestedDataPath = prop + '.' + dataName + 's';
-      var nestedData = this.getPath(nestedDataPath);
-
-      nestedData.forEach(function(nestedD, index) {
-        var nestedPath = prop;
-        if (nestedD[0] !== '') nestedPath += '.' + nestedD[0];
-
-        nestedData[index][0] = nestedPath;
+    var nestedErrors = get(this, 'nestedErrors');
+    nestedErrors.forEach(function(path, errors) {
+      var allErrorsKeys = errors.get('allKeys');
+      allErrorsKeys.forEach(function(error) {
+        var errorPath = path;
+        if (error[0] !== '') errorPath += '.' + error[0];
+        allKeys.push([errorPath, error[1]]);
       });
-      data = data.concat(nestedData);
-    }, this);
-    return Ember.A(data);
+    });
+
+    return allKeys;
+  }).property('length').cacheable(),
+
+
+  /**
+     The array which contains each direct error keys.
+
+     It differs from `allKeys` because no path is specified, it just returns error keys for the current path.
+
+     A simple example :
+
+         ['cantBeBlank', 'hasWrongLength', 'isNaN']
+
+    @property
+  */
+  keys: Ember.computed(function() {
+    var content = get(this, 'content'), keys = [];
+    content.forEach(function(error) { keys.push(error.get('key')); });
+    return keys;
+  }).property('length').cacheable(),
+
+  length: Ember.computed(function() {
+    var length = 0,
+        content = get(this, 'content'),
+        errors = get(this, 'nestedErrors');
+
+    length += content.length;
+    errors.forEach(function(nestedErrorsPath, nestedErrors) { length += get(nestedErrors, 'length'); });
+    return length;
+  }).cacheable(),
+
+  /** @private */
+  unknownProperty: function(key) {
+    var errors = get(this, 'nestedErrors');
+    return errors.get(key);
+  },
+
+  /**
+     Add an error.
+     The attributePath could be:
+
+       - A simple path (i.e. 'name')
+       - A complete path (i.e. "address.country.code")
+       - A falsy value, then the error is directly added to the error
+
+     @param {String} attributePath
+     @param {String} key
+   */
+  add: function(attributePath, key) {
+    this.propertyWillChange('length');
+
+    if (!attributePath) {
+      get(this, 'content').pushObject(Ember.ValidationError.create({key: key}));
+    } else {
+      var attrPaths = this._pathsForAttribute(attributePath);
+      var errors = this._getOrCreateNestedErrors(attrPaths['path']);
+      errors.add(attrPaths['nestedPath'], key);
+    }
+
+    this.propertyDidChange('length');
+  },
+
+
+  /**
+     Remove an error depending on the `attributePath`.
+
+     If the `attributePath` is empty, it will act as the `clear` method.
+     Else, it remove all errors starting with this path.
+
+     @param {String} attributePath
+  */
+  remove: function(attributePath) {
+    this.propertyWillChange('length');
+    if (!attributePath) {
+      this._resetErrors();
+    } else {
+      var nestedErrors = get(this, 'nestedErrors'),
+          attrPaths = this._pathsForAttribute(attributePath);
+      var errors = nestedErrors.get(attrPaths['path']);
+      if (errors) {
+        errors.remove(attrPaths['nestedPath']);
+      }
+    }
+    this.propertyDidChange('length');
+  },
+
+  /**
+     Remove all errors (direct and nested).
+   */
+  clear: function() {
+    this.propertyWillChange('length');
+    this._resetErrors();
+    this.propertyDidChange('length');
+  },
+
+  /** @private */
+  _getOrCreateNestedErrors: function(path) {
+    var nestedErrors = get(this, 'nestedErrors');
+    var errors = nestedErrors.get(path);
+    if (!errors) {
+      errors = Ember.ValidationErrors.create();
+      nestedErrors.set(path, errors);
+    }
+    return errors;
+  },
+
+  /** @private */
+  _pathsForAttribute: function(attributePath) {
+    var splittedPath = Ember.A(attributePath.split('.'));
+    return {
+      path: splittedPath[0],
+      nestedPath: splittedPath.removeAt(0).join('.')
+    };
+  },
+
+  /** @private */
+  _resetErrors: function() {
+    set(this, 'content', Ember.A());
+    set(this, 'nestedErrors', Ember.Map.create());
   }
 });

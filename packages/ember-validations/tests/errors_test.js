@@ -1,207 +1,86 @@
-var content, expected, error, errors, moduleOpts = {
+var get = Ember.get, set = Ember.set;
+
+var errors, errorKeys, moduleOpts = {
   setup: function() {
     errors = Ember.ValidationErrors.create();
   },
   teardown: function() {
-    content = null;
-    expected = null;
     errors = null;
-    error = null;
+    errorKeys = null;
   }
 };
 module("Ember.ValidationErrors", moduleOpts);
 
-test("should be initialize with '_content' property", function() {
-  ok(Ember.isArray(errors.get('_content')));
+test("should be initialized without any error", function() {
+  equal(errors.get('length'), 0, "should have no error");
 });
 
-/* #add method */
+test("add errors should change errors length", function() {
+  errors.add('name', 'cantBeBlank');
+  equal(get(errors, 'length'), 1, "has one error");
 
-// empty path
+  errors.add('name', 'wrongLength');
+  equal(get(errors, 'length'), 2, "has two errors");
 
-test("#add with empty path should add a ValidationError to _content", function() {
-  errors.add('', 'cantBeBlank', "is blank");
+  errors.add('bar', 'cantBeBlank');
+  equal(get(errors, 'length'), 3, "has three errors");
 
-  content = errors.get('_content');
-  equal(content.length, 1, "should have 1 error in its content");
+  errors.add('address.city', 'cantBeBlank');
+  equal(get(errors, 'length'), 4, "has four errors");
 
-  error = content[0];
-  ok(Ember.ValidationError.detectInstance(error), "should be a ValidationError");
-  equal(error.get('key'), 'cantBeBlank', "should set the error key");
-  equal(error.get('customMessage'), "is blank", "should set the error custom message");
+  errors.add(null, 'invalid');
+  equal(get(errors, 'length'), 5, "has five errors");
 });
 
-// unknown path
+test("remove errors should change errors length", function() {
+  errorKeys = Ember.A(['name', 'name', 'bar', 'address', 'address.city']);
+  var errorsLength = errorKeys.length;
+  errorKeys.forEach(function(key) { errors.add(key, 'cantBeBlank'); });
 
-test("#add with unknown no-dotted path should create an error at this path", function() {
-  errors.add('name', 'cantBeBlank', "is blank");
-  ok(Ember.ValidationErrors.detectInstance(errors.get('name')), "nested error should be a ValidationErrors");
-
-  content = errors.getPath('name._content');
-  equal(content.length, 1, "nested error should have one error in its content");
-
-  error = content[0];
-  equal(error.get('key'), 'cantBeBlank', "should set the nested error key");
-  equal(error.get('customMessage'), "is blank", "should set the nested error custom message");
-});
-
-test("#add with unknown dotted path should create an error at this path", function() {
-  errors.add('address.zipCode', 'shouldBeNumber', "is not a number");
-  ok(Ember.ValidationErrors.detectInstance(errors.getPath('address.zipCode')), "nested error should be a ValidationErrors");
-
-  content = errors.getPath('address.zipCode._content');
-  equal(content.length, 1, "nested error should have one error in its content");
-
-  error = content[0];
-  equal(error.get('key'), 'shouldBeNumber', "should set the nested error key");
-  equal(error.get('customMessage'), "is not a number", "should set the nested error custom message");
-});
-
-// known path
-
-test("#add with known no-dotted path should add an error at this path", function() {
-  errors.add('address', 'cantBeBlank');
-  errors.add('address', 'wrongLength');
-
-  content = errors.getPath('address._content');
-  equal(content.length, 2, "nested error should have two errors in its content");
-});
-
-test("#add with known dotted path should add an error at this path", function() {
-  errors.add('address.zipCode', 'cantBeBlank');
-  errors.add('address.zipCode', 'shouldBeNumber');
-
-  content = errors.getPath('address.zipCode._content');
-  equal(content.length, 2, "nested error should have two errors in its content");
-});
-
-
-/* #clear method */
-
-test("#clear should remove all errors in content", function() {
-  content = Ember.A();
-  for (var i = 0; i < 5; i++) {
-    content.pushObject(Ember.ValidationError.create());
+  var errorCount = {
+    'name': 2,
+    'bar': 1,
+    'address': 2
+  };
+  for (var key in errorCount) {
+    errors.remove(key);
+    errorsLength -= errorCount[key];
+    equal(get(errors, 'length'), errorsLength, "has " + errorsLength + " errors after removing '" + key + "'");
   }
-  errors.set('_content', content);
+});
+
+test("clear errors should set reset errors length", function() {
+  errorKeys = Ember.A(['name', 'name', 'bar', 'address', 'address.city']);
+  errorKeys.forEach(function(key) { errors.add(key, 'cantBeBlank'); });
+
   errors.clear();
-
-  equal(content.length, 0, "content should be cleaned");
+  equal(get(errors, 'length'), 0, "did reset errors");
 });
 
-test("#clear should remove all error properties", function() {
-  var i = 0,
-      content = ['address', 'name', 'id', 'phone'],
-      k = content.length;
-
-  for (i = 0; i < k; i++) {
-    errors.set(content[i], Ember.ValidationErrors.create());
-  }
-  errors.clear();
-
-  for (i = 0; i < k; i++) {
-    equal(errors.get(content[i]), null, "property '" + content[i] + "' is not cleaned");
-  }
+test("get keys should return all direct keys", function() {
+  errorKeys = Ember.A(['cantBeBlank', 'wrongLength', 'isNaN']);
+  errorKeys.forEach(function(key, index) {
+    errors.add(null, key);
+    var expectedLength = index + 1;
+    equal(get(errors, 'length'), expectedLength, "name has " + expectedLength + " errors");
+    deepEqual(get(errors, 'keys'), errorKeys.slice(0, expectedLength));
+  });
 });
 
-/*
- * D
- * R
- * Y
- *
- * M
- * E
- *
- */
-
-/* #keys property */
-
-test("keys should return both content errors & errors properties key", function() {
-  content = ['foo', 'bar', 'baz'];
-  expected = Ember.A();
-
-  // add direct content errors
-  for (var i = 0, k = content.length; i < k; i++) {
-    errors.add('', content[i]);
-    expected.push(["", content[i]]);
-  }
-
-  content = {
-    'address': 'cantBeBlank',
-    'address.zipCode': 'badZipCode',
-    'address.city': 'badCity',
-    'address.country': 'cantBeBlank',
-    'address.country.language': 'cantBeBlank',
-    'phone': 'wrongLength'
+test("get allKeys should return all keys (direct & nested)", function() {
+  errorKeys = {
+    '': ['cantBeBlank'],
+    'name': ['wrongLength', 'isANumber'],
+    'address': ['isInvalid'],
+    'address.zipCode': ['isNaN', 'cantBeBlank']
   };
-  // add error properties
-  for (var path in content) {
-    if (!content.hasOwnProperty(path)) continue;
-    errors.add(path, content[path]);
-    expected.push([path, content[path]]);
-  }
-
-  deepEqual(errors.get('keys'), expected);
-});
-
-/* #messages property */
-
-test("messages should return both content errors & errors properties messages", function() {
-  content = {
-    'foo': 'foo-message',
-    'bar': 'bar-message',
-    'baz': 'baz-message'
+  var expected = [];
+  var addError = function(err) {
+    errors.add(key, err);
+    expected.push([key, err]);
   };
-  expected = Ember.A();
-  for (var key in content) {
-    if (!content.hasOwnProperty(key)) continue;
-    errors.add('', key, content[key]);
-    expected.push(["", content[key]]);
+  for (var key in errorKeys) {
+    errorKeys[key].forEach(addError);
+    deepEqual(get(errors, 'allKeys'), expected);
   }
-
-  content = {
-    'address': ['cantBeBlank', "is blank"],
-    'address.zipCode': ['badZipCode', "has bad zip code"],
-    'address.city': ['badCity', "has bad city"],
-    'address.country': ['cantBeBlank', "can not be blank"],
-    'address.country.language': ['cantBeBlank', "should not be blank"],
-    'phone': ['wrongLength', "has wrong length"]
-  };
-  for (var path in content) {
-    if (!content.hasOwnProperty(path)) continue;
-    errors.add(path, content[path][0], content[path][1]);
-    expected.push([path, content[path][1]]);
-  }
-  deepEqual(errors.get('messages'), expected);
-});
-
-/* #fullMessages property */
-
-test("fullMessages should return both content errors & errors properties messages", function() {
-  content = {
-    'foo': 'foo-message',
-    'bar': 'bar-message',
-    'baz': 'baz-message'
-  };
-  expected = Ember.A();
-  for (var key in content) {
-    if (!content.hasOwnProperty(key)) continue;
-    errors.add('', key, content[key]);
-    expected.push(content[key]);
-  }
-
-  content = {
-    'address': ['cantBeBlank', "is blank"],
-    'address.zipCode': ['badZipCode', "has bad zip code"],
-    'address.city': ['badCity', "has bad city"],
-    'address.country': ['cantBeBlank', "can not be blank"],
-    'address.country.language': ['cantBeBlank', "should not be blank"],
-    'phone': ['wrongLength', "has wrong length"]
-  };
-  for (var path in content) {
-    if (!content.hasOwnProperty(path)) continue;
-    errors.add(path, content[path][0], content[path][1]);
-    expected.push(path + ' ' + content[path][1]);
-  }
-  deepEqual(errors.get('fullMessages'), expected);
 });
