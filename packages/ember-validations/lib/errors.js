@@ -37,6 +37,15 @@ Ember.ValidationErrors = Ember.Object.extend(/** @scope Ember.ValidationErrors.p
     return this._allErrorsData('keys');
   }).property('length').cacheable(),
 
+  /**
+     The array which contains each error paths and messages. It works exactly like `allKeys` property.
+
+     A simple example :
+
+         [['name', 'should have between 2 and 10 characters'], ['address', 'can not be blank'], ['address.zipCode', 'should be a number'], ['address.city', 'can not be blank']]
+
+    @property {Ember.Array}
+   */
   allMessages: Ember.computed(function() {
     return this._allErrorsData('messages');
   }).property('length').cacheable(),
@@ -58,6 +67,15 @@ Ember.ValidationErrors = Ember.Object.extend(/** @scope Ember.ValidationErrors.p
     return keys;
   }).property('length').cacheable(),
 
+  /**
+     The array which contains each direct error messages.
+
+     A simple example :
+
+         ["can not be blank", "should have between 2 and 10 characters"]
+
+    @property
+   */
   messages: Ember.computed(function() {
     var content = get(this, 'content'), messages = [];
     content.forEach(function(error) { messages.push(error.get('message')); });
