@@ -7,7 +7,7 @@ var get = Ember.get, set = Ember.set;
    These errors are defined with a path (for example: `user.address.city`).
 
  */
-Ember.ValidationErrors = Ember.Object.extend(/** @scope Ember.ValidationErrors.prototype */){
+Ember.ValidationErrors = Ember.Object.extend(/** @scope Ember.ValidationErrors.prototype */{
   nestedErrors: null,
   content: null,
 
