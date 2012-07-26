@@ -95,7 +95,6 @@ You can get the message error on each invalid property, as follow :
 ``` javascript
 // Given a presence error on the 'name' property, and a length error on the 'address.zipCode' property
 
-
 // Using `messages` property. Returns only error corresponding to the exact path
 
 myUser.getPath('errors.name.messages'); // ["can't be blank"]
@@ -104,8 +103,12 @@ myUser.getPath( errors.messages); // `undefined`, because there is no error at t
 
 // Using `allMessages` property. Returns all errors, corresponding to the exact path and nested errors
 
-myUser.getPath('errors.name.allMesssages'); // [["", "can't be blank"]]
-myUser.getPath('errors.allMessages'); // [["name", "can't be blank"], ["address.id", "should have between 5 and 10 characters"]]
+myUser.getPath('errors.name.allMesssages');
+// [["", "can't be blank"]]
+
+myUser.getPath('errors.allMessages'); 
+// [["name", "can't be blank"], 
+// ["address.id", "should have between 5 and 10 characters"]]
 
 ```
 
