@@ -69,6 +69,17 @@ Ember.ValidationErrors = Ember.Object.extend(/** @scope Ember.ValidationErrors.p
     return keys;
   }).property('length').cacheable(),
 
+  messages: Ember.computed(function() {
+    var content = get(this, 'content'), messages = [];
+    content.forEach(function(error) { messages.push(error.get('message')); });
+    return messages;
+  }).property('length').cacheable(),
+
+  /**
+     The error count, including nested errors.
+
+     @property
+   */
   length: Ember.computed(function() {
     var length = 0,
         content = get(this, 'content'),
@@ -91,20 +102,28 @@ Ember.ValidationErrors = Ember.Object.extend(/** @scope Ember.ValidationErrors.p
 
        - A simple path (i.e. 'name')
        - A complete path (i.e. "address.country.code")
-       - A falsy value, then the error is directly added to the error
+       - A falsy value, then the error is directly added to the error.
 
      @param {String} attributePath
      @param {String} key
+     @param {Object} format contains message format values
+     @param {Object} used to replace default message
    */
-  add: function(attributePath, key) {
+  add: function(attributePath, key, format, customMessage) {
     this.propertyWillChange('length');
 
     if (!attributePath) {
-      get(this, 'content').pushObject(Ember.ValidationError.create({key: key}));
+      var error = Ember.ValidationError.create({
+        key: key,
+        customMessage: customMessage,
+        messageFormat: format
+      });
+      get(this, 'content').pushObject(error);
+
     } else {
       var attrPaths = this._pathsForAttribute(attributePath);
       var errors = this._getOrCreateNestedErrors(attrPaths['path']);
-      errors.add(attrPaths['nestedPath'], key);
+      errors.add(attrPaths['nestedPath'], key, format, customMessage);
     }
 
     this.propertyDidChange('length');

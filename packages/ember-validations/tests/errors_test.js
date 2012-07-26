@@ -84,3 +84,25 @@ test("get allKeys should return all keys (direct & nested)", function() {
     deepEqual(get(errors, 'allKeys'), expected);
   }
 });
+
+test("get messages should return all direct messages", function() {
+  var originalMessages = Ember.ValidationError.messages;
+  Ember.ValidationError.messages = {
+    'cantBeBlank': "can not be blank",
+    'lengthTooShort': "at least @{length} chars",
+    'lengthTooLong': "at most @{length} chars"
+  };
+  var expected = ["can not be blank"];
+  errors.add(null, 'cantBeBlank');
+  deepEqual(get(errors, 'messages'), expected, "has 'cantBeBlank' message");
+
+  expected.push("at least @{length} chars");
+  errors.add(null, 'lengthTooShort');
+  deepEqual(get(errors, 'messages'), expected, "has 'lengthTooShort' message");
+
+  expected.push("at most 12 chars");
+  errors.add(null, 'lengthTooLong', {'length': '12'});
+  deepEqual(get(errors, 'messages'), expected, "has 'lengthTooLong' formatted message");
+
+  Ember.ValidationError.messages = originalMessages;
+});
