@@ -34,23 +34,12 @@ Ember.ValidationErrors = Ember.Object.extend(/** @scope Ember.ValidationErrors.p
      @property {Ember.Array}
    */
   allKeys: Ember.computed(function() {
-    var keys = get(this, 'keys'),
-        allKeys = [];
-    keys.forEach(function(key) { allKeys.push(['', key]); });
-
-    var nestedErrors = get(this, 'nestedErrors');
-    nestedErrors.forEach(function(path, errors) {
-      var allErrorsKeys = errors.get('allKeys');
-      allErrorsKeys.forEach(function(error) {
-        var errorPath = path;
-        if (error[0] !== '') errorPath += '.' + error[0];
-        allKeys.push([errorPath, error[1]]);
-      });
-    });
-
-    return allKeys;
+    return this._allErrorsData('keys');
   }).property('length').cacheable(),
 
+  allMessages: Ember.computed(function() {
+    return this._allErrorsData('messages');
+  }).property('length').cacheable(),
 
   /**
      The array which contains each direct error keys.
@@ -186,5 +175,27 @@ Ember.ValidationErrors = Ember.Object.extend(/** @scope Ember.ValidationErrors.p
   _resetErrors: function() {
     set(this, 'content', Ember.A());
     set(this, 'nestedErrors', Ember.Map.create());
+  },
+
+
+  /** @private */
+  _allErrorsData: function(dataName) {
+    var directData = get(this, dataName),
+        data = [];
+    directData.forEach(function(singleData) { data.push(['', singleData]); });
+
+    var nestedErrors = get(this, 'nestedErrors');
+    nestedErrors.forEach(function(path, errors) {
+      var allErrorsDataPath = 'all' + dataName[0].toUpperCase() + dataName.slice(1);
+      var allErrorsData = errors.get(allErrorsDataPath);
+
+      allErrorsData.forEach(function(error) {
+        var errorPath = path;
+        if (error[0] !== '') errorPath += '.' + error[0];
+        data.push([errorPath, error[1]]);
+      });
+    });
+
+    return data;
   }
 });

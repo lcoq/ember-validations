@@ -1,12 +1,22 @@
 var get = Ember.get, set = Ember.set;
 
-var errors, errorKeys, moduleOpts = {
+var errors, errorKeys, originalErrorMessages, MESSAGES, moduleOpts = {
   setup: function() {
     errors = Ember.ValidationErrors.create();
+    originalErrorMessages = Ember.ValidationError.messages;
+    MESSAGES = {
+      'cantBeBlank': "can not be blank",
+      'lengthTooShort': "at least @{length} chars",
+      'lengthTooLong': "at most @{length} chars"
+    };
+    Ember.ValidationError.messages = MESSAGES;
   },
   teardown: function() {
     errors = null;
     errorKeys = null;
+    Ember.ValidationError.messages = originalErrorMessages;
+    originalErrorMessages = null;
+    MESSAGES = null;
   }
 };
 module("Ember.ValidationErrors", moduleOpts);
@@ -86,23 +96,29 @@ test("get allKeys should return all keys (direct & nested)", function() {
 });
 
 test("get messages should return all direct messages", function() {
-  var originalMessages = Ember.ValidationError.messages;
-  Ember.ValidationError.messages = {
-    'cantBeBlank': "can not be blank",
-    'lengthTooShort': "at least @{length} chars",
-    'lengthTooLong': "at most @{length} chars"
-  };
-  var expected = ["can not be blank"];
+  var expected = [MESSAGES['cantBeBlank']];
   errors.add(null, 'cantBeBlank');
   deepEqual(get(errors, 'messages'), expected, "has 'cantBeBlank' message");
 
-  expected.push("at least @{length} chars");
+  expected.push(MESSAGES['lengthTooShort']);
   errors.add(null, 'lengthTooShort');
   deepEqual(get(errors, 'messages'), expected, "has 'lengthTooShort' message");
 
   expected.push("at most 12 chars");
   errors.add(null, 'lengthTooLong', {'length': '12'});
   deepEqual(get(errors, 'messages'), expected, "has 'lengthTooLong' formatted message");
+});
 
-  Ember.ValidationError.messages = originalMessages;
+test("get allMessages should return all messages (direct & nested)", function() {
+  var expected = [['', MESSAGES['cantBeBlank']]];
+  errors.add(null, 'cantBeBlank');
+  deepEqual(get(errors, 'allMessages'), expected, "has 'cantBeBlank' message");
+
+  expected.push(['name', MESSAGES['lengthTooShort']]);
+  errors.add('name', 'lengthTooShort');
+  deepEqual(get(errors, 'allMessages'), expected, "has 'lengthTooShort' message");
+
+  expected.push(['address.city', MESSAGES['lengthTooLong']]);
+  errors.add('address.city', 'lengthTooLong');
+  deepEqual(get(errors, 'allMessages'), expected, "has 'lengthTooLong' message");
 });
