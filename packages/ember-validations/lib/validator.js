@@ -22,6 +22,9 @@ Ember.Validator = Ember.Object.extend(/**@scope Ember.Validator.prototype */{
   /** @private */
   init: function() {
     this._super();
+    if (!this.hasOwnProperty('options')) {
+      this.set('options', {});
+    }
     if (this.checkValidity) {
       this.checkValidity();
     }
