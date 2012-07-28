@@ -43,7 +43,7 @@ Ember.Validators = Ember.Namespace.create(/**@scope Ember.Validators */{
         }
 
         if (validator && options['options']) {
-          validatorOptions = options['options'];
+            validatorOptions = options['options'];
         }
       }
     }
@@ -60,6 +60,9 @@ Ember.Validators = Ember.Namespace.create(/**@scope Ember.Validators */{
       throw new Error("Validator not found for name '" + name + "'.");
     }
 
+    if (Ember.typeOf(validatorOptions) !== 'object') {
+      validatorOptions = {value: validatorOptions};
+    }
     validator.set('options', validatorOptions);
     return validator;
   }
