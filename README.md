@@ -16,7 +16,6 @@ Currently you must build ember-validations yourself. Clone the repository, run `
 
 #### Roadmap
 
-* Handle nested object validations
 * One-property validation
 * Automatic validation option
 

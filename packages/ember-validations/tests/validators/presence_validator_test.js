@@ -20,7 +20,7 @@ test("should add error when the attribute is not present", function() {
 
     var errorKeys = errors.get('keys');
     equal(errorKeys.length, 1, "has one error");
-    equal(errorKeys[0], "cantBeBlank", "has right key");
+    equal(errorKeys[0], "blank", "has right key");
 
     var errorMessage = errors.get('messages');
     equal(errorMessage[0], "can't be blank", "has right message");

@@ -1,4 +1,4 @@
-Ember.ValidationError.addMessage('cantBeBlank', "can't be blank");
+Ember.ValidationError.addMessage('blank', "can't be blank");
 
 /**
    @class
@@ -6,13 +6,15 @@ Ember.ValidationError.addMessage('cantBeBlank', "can't be blank");
    This validator validates that the attribute is not blank (`undefined`, `null`, empty string
    or string which contains only spaces).
 
+   It can add the error key 'blank'.
+
    @extends Ember.Validator
 */
 Ember.Validators.PresenceValidator = Ember.Validator.extend({
   validate: function(obj, attr, value) {
     var invalidValues = Ember.A([undefined, null]);
     if (invalidValues.contains(value) || value.match(/^\s*$/)) {
-      obj.get('errors').add(attr, "cantBeBlank");
+      obj.get('errors').add(attr, "blank");
     }
   }
 });
