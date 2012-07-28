@@ -19,10 +19,11 @@ test("should add error when the attribute is not present", function() {
     validator.validate(model, 'name', val);
 
     var errors = getPath(model, 'errors.name');
+    ok(errors, "has a errors.name object");
 
     var errorKeys = get(errors, 'keys');
     equal(errorKeys.length, 1, "has one error");
-    equal(errorKeys[0], "blank", "has right key");
+    equal(errorKeys[0], 'blank', "has right key");
 
     var errorMessage = get(errors, 'messages');
     equal(errorMessage[0], "can't be blank", "has right message");
