@@ -47,16 +47,13 @@ test("greaterThan option", function() {
   hasOneError(model, 'amount', 'notGreaterThan', "is not greater than 12");
 });
 
-test("greaterThanOrEqualTo option with less", function() {
-  set(validator, 'options', {greaterThanOrEqualTo: 12});
-  validator.validate(model, 'amount', "4");
-  hasOneError(model, 'amount', 'notGreaterThanOrEqualTo', "is not greater than or equal to 12");
-});
-
-test("greaterThanOrEqualTo option with equal", function() {
+test("greaterThanOrEqualTo option", function() {
   set(validator, 'options', {greaterThanOrEqualTo: 12});
   validator.validate(model, 'amount', "12");
-  ok(!getPath(model, 'errors.amount'), "has no amount errors");
+  ok(!getPath(model, 'errors.amount'), "has no amount errors when equal");
+
+  validator.validate(model, 'amount', "4");
+  hasOneError(model, 'amount', 'notGreaterThanOrEqualTo', "is not greater than or equal to 12");
 });
 
 test("lessThan option", function() {
@@ -67,6 +64,18 @@ test("lessThan option", function() {
 
 test("lessThanOrEqualTo option with more", function() {
   set(validator, 'options', {lessThanOrEqualTo: 12});
+  validator.validate(model, 'amount', 12);
+  ok(!getPath(model, 'errors.amount'), "has no amount errors when equal");
+
   validator.validate(model, 'amount', "13");
   hasOneError(model, 'amount', 'notLessThanOrEqualTo', "is not less than or equal to 12");
+});
+
+test("equalTo option", function() {
+  set(validator, 'options', {equalTo: 12});
+  validator.validate(model, 'amount', "12");
+  ok(!getPath(model, 'errors.amount'), "has no amount errors when equal");
+
+  validator.validate(model, 'amount', "11");
+  hasOneError(model, 'amount', 'notEqual', "is not equal to 12");
 });

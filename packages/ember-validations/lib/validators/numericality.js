@@ -6,7 +6,8 @@ Ember.ValidationError.addMessages({
   'notGreaterThan': "is not greater than @{value}",
   'notGreaterThanOrEqualTo': "is not greater than or equal to @{value}",
   'notLessThan': "is not less than @{value}",
-  'notLessThanOrEqualTo': "is not less than or equal to @{value}"
+  'notLessThanOrEqualTo': "is not less than or equal to @{value}",
+  'notEqual': "is not equal to @{value}"
 });
 
 Ember.Validators.NumericalityValidator = Ember.Validator.extend({
@@ -34,6 +35,9 @@ Ember.Validators.NumericalityValidator = Ember.Validator.extend({
       }
       if (typeof options.lessThanOrEqualTo === 'number' && parsedValue > options.lessThanOrEqualTo) {
         errors.add(attr, 'notLessThanOrEqualTo', {value: options.lessThanOrEqualTo});
+      }
+      if (typeof options.equalTo === 'number' && parsedValue !== options.equalTo) {
+        errors.add(attr, 'notEqual', {value: options.equalTo});
       }
     }
   }
