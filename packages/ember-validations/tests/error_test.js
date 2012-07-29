@@ -35,6 +35,17 @@ test("#addMessage should override existing message", function() {
   equal(VError.messages['aKey'], 'aNewMessage');
 });
 
+test("#addMessages should add each message", function() {
+  var messages = {
+    'foo': 'aMessage',
+    'bar': 'anotherMessage'
+  };
+  VError.addMessages(messages);
+  for (var msgKey in messages) {
+    equal(VError.messages[msgKey], messages[msgKey], "messages '" + msgKey + "' should be added");
+  }
+});
+
 test("#getMessage should return message matching the key passed", function() {
   equal(VError.getMessage('aKey'), 'aMessage');
 });
@@ -45,9 +56,9 @@ test("#getMessage should return undefined when no message match", function() {
 
 // instance methods
 
-test("should return undefined for 'message' property when both customMessage and key are not set", function() {
+test("should raise an error for 'message' property when both customMessage and key are not set", function() {
   error = VError.create();
-  equal(get(error, 'message'), undefined);
+  raises(function() { get(error, 'message');});
 });
 
 test("should set 'message' property when the key is set", function() {

@@ -47,6 +47,8 @@ Ember.ValidationError = Ember.Object.extend(/** @scope Ember.ValidationError.pro
     var message = get(this, 'customMessage') || Ember.ValidationError.getMessage(get(this, 'key')),
         messageFormat = get(this, 'messageFormat');
 
+    Ember.assert("no message are defined for key: " + get(this, 'key'), message);
+
     if (messageFormat) {
       for (var key in messageFormat) {
         if (!messageFormat.hasOwnProperty(key)) continue;
@@ -76,6 +78,19 @@ Ember.ValidationError.reopenClass(/** @scope Ember.ValidationError */{
    */
   addMessage: function(key, message) {
     this.messages[key] = message;
+  },
+
+  /**
+     Add or override each message passed as arguments.
+
+     @param {Object} messages
+  */
+  addMessages: function(messages) {
+    var addMsg = get(this, 'addMessage');
+    for (var msgKey in messages) {
+      if (!messages.hasOwnProperty(msgKey)) continue;
+      this.addMessage(msgKey, messages[msgKey]);
+    }
   },
 
   /**
