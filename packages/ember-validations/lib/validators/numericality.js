@@ -45,9 +45,12 @@ Ember.ValidationError.addMessages({
            }
          }
        }
+
+   @extends Ember.Validator
  */
 Ember.Validators.NumericalityValidator = Ember.Validator.extend(/** @scope Ember.Validators.NumericalityValidator.prototype */{
 
+  /** @private */
   validate: function(obj, attr, value) {
     var parsedValue = parseFloat(value),
         parsedInt = parseInt(value, 10),
