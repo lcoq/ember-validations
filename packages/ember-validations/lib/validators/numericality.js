@@ -10,7 +10,43 @@ Ember.ValidationError.addMessages({
   'notEqual': "is not equal to @{value}"
 });
 
-Ember.Validators.NumericalityValidator = Ember.Validator.extend({
+
+/**
+   @class
+
+   Validates whether the value is numeric.
+
+   Options:
+
+    - `onlyInteger` - The value has to be an integer
+    - `greaterThan` - The value must be greater than the supplied value
+    - `greaterThanOrEqualTo` - The value must be greater than or equal to the supplied value
+    - `lessThan` - The value must be less than the supplied value
+    - `lessThanOrEqualTo` - The value must be less than or equal to the supplied value
+    - `equalTo` - The value must be equal to the supplied value
+
+   The simple way to use the `NumericalityValidator` is to set the validation to `true`.
+   The validator will add an error if the value can't be parsed as a number:
+
+       validations: {
+         amount: {
+           numericality: true
+         }
+       }
+
+   You can also supply custom options, as follow:
+
+       validations: {
+         amount: {
+           numericality: {
+             onlyInteger: true,
+             greaterThanOrEqualTo: 1,
+             lessThan: 100
+           }
+         }
+       }
+ */
+Ember.Validators.NumericalityValidator = Ember.Validator.extend(/** @scope Ember.Validators.NumericalityValidator.prototype */{
 
   validate: function(obj, attr, value) {
     var parsedValue = parseFloat(value),
