@@ -22,7 +22,10 @@
         "strictEqual",
         "module",
         "expect",
-        "minispade"
+        "minispade",
+        "testNoError",
+        "testHasErrors",
+        "testBothValidities"
     ],
 
     "node" : false,

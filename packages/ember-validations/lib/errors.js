@@ -81,7 +81,7 @@ Ember.ValidationErrors = Ember.Object.extend(/** @scope Ember.ValidationErrors.p
     @property
   */
   keys: Ember.computed(function() {
-    var content = get(this, 'content'), keys = [];
+    var content = get(this, 'content'), keys = Ember.A();
     content.forEach(function(error) { keys.push(error.get('key')); });
     return keys;
   }).property('length').cacheable(),
@@ -96,7 +96,7 @@ Ember.ValidationErrors = Ember.Object.extend(/** @scope Ember.ValidationErrors.p
     @property
    */
   messages: Ember.computed(function() {
-    var content = get(this, 'content'), messages = [];
+    var content = get(this, 'content'), messages = Ember.A();
     content.forEach(function(error) { messages.push(error.get('message')); });
     return messages;
   }).property('length').cacheable(),
