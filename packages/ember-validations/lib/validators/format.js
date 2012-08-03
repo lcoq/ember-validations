@@ -4,6 +4,19 @@ Ember.ValidationError.addMessages({
   'invalid': "is invalid"
 });
 
+
+/**
+   @class
+
+   Validates whether the attribute has (not) the supplied regexp.
+
+   Options:
+
+    - `with` - The value must match this pattern
+    - `without` - The value must not match this pattern
+
+   @extends Ember.Validator
+ */
 Ember.Validators.FormatValidator = Ember.Validator.extend({
   validate: function(obj, attr, value) {
     var options = get(this, 'options'),
