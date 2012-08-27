@@ -89,7 +89,11 @@ Ember.Validations = Ember.Mixin.create(/**@scope Ember.Validations.prototype */{
      @returns {Boolean}
   */
   validate: function() {
-    var validations = get(this, 'validations');
+    var validations = get(this, 'validations'),
+        errors = get(this, 'errors');
+
+    errors.clear();
+
     for (var attribute in validations) {
       if (!validations.hasOwnProperty(attribute)) continue;
 

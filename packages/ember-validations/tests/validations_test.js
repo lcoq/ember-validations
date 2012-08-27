@@ -57,3 +57,10 @@ test("#validate should return true when valid", function() {
   model.set('name', 'ember');
   equal(model.validate(), true, "should return true");
 });
+
+test("#validate should remove previous errors", function() {
+  model.get('errors').add('name', 'blank');
+  model.set('name', 'ember');
+  model.validate();
+  equal(model.get('errors').get('length'), 0, "should have no error");
+});
