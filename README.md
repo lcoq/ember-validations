@@ -97,25 +97,25 @@ You can get the message error on each invalid property, as follow :
 
 // Using `fullMessages` property. Returns all error formatted.
 
-myUser.getPath('errors.fullMessages');
+myUser.get('errors.fullMessages');
 // ["name can't be blank", "address.zipCode should have between 5 and 10 characters"]
-myUser.getPath('errors.name.fullMessages'); // ["can't be blank"]
-myUser.getPath('errors.address.zipCode.fullMessages'); // ["should have between 5 and 10 characters"]
+myUser.get('errors.name.fullMessages'); // ["can't be blank"]
+myUser.get('errors.address.zipCode.fullMessages'); // ["should have between 5 and 10 characters"]
 
 
 // Using `messages` property. Returns only error corresponding to the exact path
 
-myUser.getPath('errors.name.messages'); // ["can't be blank"]
-myUser.getPath('errors.adress.zipCode.messages'); // ["should have between 5 and 10 characters"]
-myUser.getPath('errors.messages'); // `undefined`, because there is no error at this path
+myUser.get('errors.name.messages'); // ["can't be blank"]
+myUser.get('errors.adress.zipCode.messages'); // ["should have between 5 and 10 characters"]
+myUser.get('errors.messages'); // `undefined`, because there is no error at this path
 
 
 // Using `allMessages` property. Returns all errors, corresponding to the exact path and nested errors
 
-myUser.getPath('errors.name.allMesssages');
+myUser.get('errors.name.allMesssages');
 // [["", "can't be blank"]]
 
-myUser.getPath('errors.allMessages'); 
+myUser.get('errors.allMessages'); 
 // [["name", "can't be blank"], ["address.id", "should have between 5 and 10 characters"]]
 ```
 
