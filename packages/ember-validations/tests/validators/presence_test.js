@@ -32,5 +32,8 @@ test("should add error when the attribute is not present", function() {
 
 test("should not add error when the attribute is present", function() {
   validator.validate(model, 'name', "my name");
-  equal(getPath(model, 'errors.name.keys'), undefined, "should not set 'name' error");
+  equal(getPath(model, 'errors.name.keys'), undefined, "should not set 'name' error for string value");
+
+  validator.validate(model, 'name', 0);
+  equal(getPath(model, 'errors.name.keys'), undefined, "should not set 'name' error for value 0");
 });
