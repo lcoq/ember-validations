@@ -24,7 +24,7 @@ Ember.ValidationErrors = Ember.Object.extend(/** @scope Ember.ValidationErrors.p
 
          [['name', 'hasWrongLength'], ['address', 'cantBeBlank'], ['address.zipCode', 'isNaN'], ['address.city', 'cantBeBlank']]
 
-     NOTE: If you get this property from a nested error (for example "errors.getPath('address.allKeys')",
+     NOTE: If you get this property from a nested error (for example "errors.get('address.allKeys')",
      there could be empty path.
 
      With the same example, based on "address.allKeys":

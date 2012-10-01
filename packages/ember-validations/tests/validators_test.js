@@ -1,4 +1,4 @@
-var get = Ember.get, getPath = Ember.getPath, set = Ember.set;
+var get = Ember.get, set = Ember.set;
 
 var validatorClass, validator, originalExistentValidator, moduleOpts = {
   setup: function() {
@@ -32,12 +32,12 @@ test("should instantiate validator from options when set", function() {
   var validator = Ember.Validators.getValidator('foo', {validator: validatorClass, options: {opt: 'yes'}});
 
   ok(validatorClass.detectInstance(validator), "return instance of validator class passed as parameters");
-  equal(getPath(validator, 'options.opt'), 'yes', "should set validator options");
+  equal(get(validator, 'options.opt'), 'yes', "should set validator options");
 });
 
 test("should instantiate validator from options, and set 'options.value' property when set", function() {
   var validator = Ember.Validators.getValidator('foo', {validator: validatorClass, options: 'foo'});
-  equal(getPath(validator, 'options.value'), 'foo', "should set validator 'options.value' property");
+  equal(get(validator, 'options.value'), 'foo', "should set validator 'options.value' property");
 });
 
 // custom validate function
@@ -48,7 +48,7 @@ test("should create validator with validate method from options when set", funct
 
   ok(Ember.Validator.detectInstance(validator), "should be an instance of Validator");
   equal(get(validator, 'validate'), validate, "should set validate method from options");
-  equal(getPath(validator, 'options.opt'), 'yes', "should set validator options");
+  equal(get(validator, 'options.opt'), 'yes', "should set validator options");
 });
 
 // existent validator
@@ -57,11 +57,11 @@ test("should find the validator whose name matches", function() {
   var validator = Ember.Validators.getValidator('existent', {opt: 'foo'});
 
   ok(Ember.Validators.ExistentValidator.detectInstance(validator), "should be an instance of ExistentValidator");
-  equal(getPath(validator, 'options.opt'), 'foo', "should set validator options");
+  equal(get(validator, 'options.opt'), 'foo', "should set validator options");
 });
 
 test("should set 'option.value' validator property when options is not a hash", function() {
   var validator = Ember.Validators.getValidator('existent', 12);
 
-  equal(getPath(validator, 'options.value'), 12, "should set 'option' property to the argument value");
+  equal(get(validator, 'options.value'), 12, "should set 'option' property to the argument value");
 });

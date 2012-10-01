@@ -1,6 +1,6 @@
 /*global testNoError:true, testHasErrors:true, testBothValidities:true */
 
-var set = Ember.set, getPath = Ember.getPath;
+var set = Ember.set, get = Ember.get;
 
 testNoError = function(testName, validatorClass, validatorOptions, value) {
   test(testName + " with valid value '" + value + "'", function() {
@@ -12,7 +12,7 @@ testNoError = function(testName, validatorClass, validatorOptions, value) {
     }
 
     validator.validate(model, 'foo', value);
-    ok(!getPath(model, 'errors.foo'), "has no error");
+    ok(!get(model, 'errors.foo'), "has no error");
   });
 };
 
@@ -27,8 +27,8 @@ testHasErrors = function(testName, validatorClass, validatorOptions, value, expe
 
     validator.validate(model, 'foo', value);
 
-    var errorKeys = getPath(model, 'errors.foo.keys'),
-        errorMsgs = getPath(model, 'errors.foo.messages');
+    var errorKeys = get(model, 'errors.foo.keys'),
+        errorMsgs = get(model, 'errors.foo.messages');
     ok(Ember.isArray(errorKeys), "has keys for error path 'errors.foo.keys'");
     ok(Ember.isArray(errorMsgs), "has messages for error path 'errors.foo.messages");
 

@@ -1,4 +1,4 @@
-var get = Ember.get, getPath = Ember.getPath, set = Ember.set;
+var get = Ember.get, set = Ember.set;
 
 var model, validator, moduleOpts = {
   setup: function() {
@@ -18,7 +18,7 @@ test("should add error when the attribute is not present", function() {
     set(model, 'errors', Ember.ValidationErrors.create());
     validator.validate(model, 'name', val);
 
-    var errors = getPath(model, 'errors.name');
+    var errors = get(model, 'errors.name');
     ok(errors, "has a errors.name object");
 
     var errorKeys = get(errors, 'keys');
@@ -32,8 +32,8 @@ test("should add error when the attribute is not present", function() {
 
 test("should not add error when the attribute is present", function() {
   validator.validate(model, 'name', "my name");
-  equal(getPath(model, 'errors.name.keys'), undefined, "should not set 'name' error for string value");
+  equal(get(model, 'errors.name.keys'), undefined, "should not set 'name' error for string value");
 
   validator.validate(model, 'name', 0);
-  equal(getPath(model, 'errors.name.keys'), undefined, "should not set 'name' error for value 0");
+  equal(get(model, 'errors.name.keys'), undefined, "should not set 'name' error for value 0");
 });

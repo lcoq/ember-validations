@@ -34,7 +34,7 @@ test("should set 'error' property", function() {
 
 test("#validate should call #validate validator method", function() {
   model.validate();
-  var nameErrorsKeys = model.getPath('errors.name.keys');
+  var nameErrorsKeys = model.get('errors.name.keys');
   deepEqual(nameErrorsKeys, ["isEmpty"], "should call #validate validator method");
 });
 

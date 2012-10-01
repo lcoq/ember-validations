@@ -1,4 +1,4 @@
-var get = Ember.get, getPath = Ember.getPath, set = Ember.set;
+var get = Ember.get, set = Ember.set;
 
 /**
    @class
@@ -57,7 +57,7 @@ var get = Ember.get, getPath = Ember.getPath, set = Ember.set;
            amount: {
              aCustomValidation: {
                validator: function(obj, attr, value) {
-                 var moreThan = this.getPath('options.moreThan');
+                 var moreThan = this.get('options.moreThan');
                  if (value <= moreThan) {
                    obj.get('errors').add(attr, "should not be falsy");
                  }
@@ -102,7 +102,7 @@ Ember.Validations = Ember.Mixin.create(/**@scope Ember.Validations.prototype */{
         validator.validate(this, attribute, this.get(attribute));
       }
     }
-    var isValid = getPath(this, 'errors.length') === 0;
+    var isValid = get(this, 'errors.length') === 0;
     set(this, 'isValid', isValid);
     return isValid;
   }
