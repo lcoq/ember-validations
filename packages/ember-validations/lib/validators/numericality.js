@@ -63,21 +63,38 @@ Ember.Validators.NumericalityValidator = Ember.Validator.extend(/** @scope Ember
       if (options.onlyInteger === true && (parsedValue !== parsedInt)) {
         errors.add(attr, 'notInteger');
       }
-      if (typeof options.greaterThan === 'number' && parsedValue <= options.greaterThan) {
-        errors.add(attr, 'notGreaterThan', {value: options.greaterThan});
+
+      var optionValue;
+
+      optionValue = this.optionValue(obj, 'greaterThan', 'number');
+      if (optionValue !== null && parsedValue <= optionValue) {
+        errors.add(attr, 'notGreaterThan', {value: optionValue});
       }
-      if (typeof options.greaterThanOrEqualTo === 'number' && parsedValue < options.greaterThanOrEqualTo) {
-        errors.add(attr, 'notGreaterThanOrEqualTo', {value: options.greaterThanOrEqualTo});
+
+      optionValue = this.optionValue(obj, 'greaterThanOrEqualTo', 'number');
+      if (optionValue !== null && parsedValue < optionValue) {
+        errors.add(attr, 'notGreaterThanOrEqualTo', {value: optionValue});
       }
-      if (typeof options.lessThan === 'number' && parsedValue >= options.lessThan) {
-        errors.add(attr, 'notLessThan', {value: options.lessThan});
+
+      optionValue = this.optionValue(obj, 'lessThan', 'number');
+      if (optionValue !== null && parsedValue >= optionValue) {
+        errors.add(attr, 'notLessThan', {value: optionValue});
       }
-      if (typeof options.lessThanOrEqualTo === 'number' && parsedValue > options.lessThanOrEqualTo) {
-        errors.add(attr, 'notLessThanOrEqualTo', {value: options.lessThanOrEqualTo});
+
+      optionValue = this.optionValue(obj, 'lessThanOrEqualTo', 'number');
+      if (optionValue !== null && parsedValue > optionValue) {
+        errors.add(attr, 'notLessThanOrEqualTo', {value: optionValue});
       }
-      if (typeof options.equalTo === 'number' && parsedValue !== options.equalTo) {
-        errors.add(attr, 'notEqual', {value: options.equalTo});
+
+      optionValue = this.optionValue(obj, 'equalTo', 'number');
+      if (optionValue !== null && parsedValue !== optionValue) {
+        errors.add(attr, 'notEqual', {value: optionValue});
       }
     }
+  },
+
+  isValidForOption: function(obj, option, condition) {
+    var optionValue = this.optionValue(option);
+    return optionValue !== null && condition.apply(obj, optionValue);
   }
 });

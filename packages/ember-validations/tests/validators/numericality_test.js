@@ -23,6 +23,12 @@ testBothValidities(
 );
 
 testBothValidities(
+  "greaterThan option", vClass, {greaterThan: function() { return 12; }},
+  "13",
+  "12", {notGreaterThan: "is not greater than 12"}
+);
+
+testBothValidities(
   "greaterThanOrEqualTo option", vClass, {greaterThanOrEqualTo: 12},
   "12",
   "11", {notGreaterThanOrEqualTo: "is not greater than or equal to 12"}
