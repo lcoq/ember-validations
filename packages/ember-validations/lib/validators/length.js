@@ -24,18 +24,24 @@ Ember.Validators.LengthValidator = Ember.Validator.extend(/** @scope Ember.Valid
   validate: function(obj, attr, value) {
     var options = get(this, 'options'),
         errors = get(obj, 'errors'),
-        length = value ? Ember.get(value, 'length') : 0;
+        length = value ? Ember.get(value, 'length') : 0,
+        optionValue;
 
-    if (typeof options.is === 'number') {
-      if (length !== options.is) {
-        errors.add(attr, 'wrongLength', {value: options.is});
+    optionValue = this.optionValue(obj, 'is', 'number');
+    if (optionValue !== null) {
+      if (length !== optionValue) {
+        errors.add(attr, 'wrongLength', {value: optionValue});
       }
     } else {
-      if (typeof options.minimum === 'number' && length < options.minimum) {
-        errors.add(attr, 'tooShortLength', {value: options.minimum});
+
+      optionValue = this.optionValue(obj, 'minimum', 'number');
+      if (optionValue !== null && length < optionValue) {
+        errors.add(attr, 'tooShortLength', {value: optionValue});
       }
-      if (typeof options.maximum === 'number' && length > options.maximum) {
-        errors.add(attr, 'tooLongLength', {value: options.maximum});
+
+      optionValue = this.optionValue(obj, 'maximum', 'number');
+      if (optionValue !== null && length > optionValue) {
+        errors.add(attr, 'tooLongLength', {value: optionValue});
       }
     }
   }
