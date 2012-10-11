@@ -42,5 +42,31 @@ Ember.Validator = Ember.Object.extend(/**@scope Ember.Validator.prototype */{
   */
   validate: function(obj, attr, value) {
     throw new Error("Ember.Validator subclasses should implement validate() method.");
+  },
+
+  /**
+     Return the value of the option, or null is the type does not match
+     the expected.
+     When type is not specified, it always return the value
+
+     @param {Object} object
+      The object which contains the attribute that has to be validated
+     @param {String} option
+      The option you want its value
+     @param {String} type
+      Optional. When renseigned, return null if the value does not match the type
+   */
+  optionValue: function(obj, option, type) {
+    var val = this.get('options.' + option);
+    if (typeof val === 'function') {
+      val = val.apply(obj);
+    }
+
+    if (!type || (typeof type === 'string' && typeof val === type)) {
+      return val;
+    } else if (type === undefined) {
+      return val;
+    }
+    return null;
   }
 });
