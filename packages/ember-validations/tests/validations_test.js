@@ -64,3 +64,13 @@ test("#validate should remove previous errors", function() {
   model.validate();
   equal(model.get('errors').get('length'), 0, "should have no error");
 });
+
+test("#validation should notify errors property changed", function() {
+  model.reopen({
+    observer: Ember.observer(function() {
+      ok(true, "errors has changed");
+    }, 'errors')
+  });
+  model.validate();
+  expect(1);
+});

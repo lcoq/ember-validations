@@ -92,6 +92,8 @@ Ember.Validations = Ember.Mixin.create(/**@scope Ember.Validations.prototype */{
     var validations = get(this, 'validations'),
         errors = get(this, 'errors');
 
+    this.propertyWillChange('errors');
+
     errors.clear();
 
     for (var attribute in validations) {
@@ -106,8 +108,11 @@ Ember.Validations = Ember.Mixin.create(/**@scope Ember.Validations.prototype */{
         validator.validate(this, attribute, this.get(attribute));
       }
     }
+
     var isValid = get(this, 'errors.length') === 0;
     set(this, 'isValid', isValid);
+
+    this.propertyDidChange('errors');
     return isValid;
   }
 });
