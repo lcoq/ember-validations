@@ -11,6 +11,12 @@ testBothValidities(
 );
 
 testBothValidities(
+  "with option with RegExp returned by a function", vClass, {'with': function() { return new RegExp(/^abc/); }},
+  "abcdef",
+  "bcdef", {invalid: "is invalid"}
+);
+
+testBothValidities(
   "with option with string", vClass, {'with': "bcd"},
   "abcdef",
   "bdef", {invalid: "is invalid"}

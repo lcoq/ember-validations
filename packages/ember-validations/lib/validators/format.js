@@ -20,11 +20,16 @@ Ember.ValidationError.addMessages({
 Ember.Validators.FormatValidator = Ember.Validator.extend({
   validate: function(obj, attr, value) {
     var options = get(this, 'options'),
-        errors = get(obj, 'errors');
-    if ((typeof options['with'] === 'string' || options['with'] instanceof RegExp) && !value.match(options['with'])) {
+        errors = get(obj, 'errors'),
+        optionValue;
+
+    optionValue = this.optionValue(obj, 'with');
+    if ((typeof optionValue === 'string' || optionValue instanceof RegExp) && !value.match(optionValue)) {
       errors.add(attr, 'invalid');
     }
-    if ((typeof options['without'] === 'string' || options['without'] instanceof RegExp) && value.match(options['without'])) {
+
+    optionValue = this.optionValue(obj, 'without');
+    if ((typeof optionValue === 'string' || optionValue instanceof RegExp) && value.match(optionValue)) {
       errors.add(attr, 'invalid');
     }
   }

@@ -11,7 +11,7 @@ testBothValidities(
 );
 
 testBothValidities(
-  "minimum option", vClass, {minimum: function() { return 3; }},
+  "minimum option with function", vClass, {minimum: function() { return 3; }},
   "123",
   "12", {tooShortLength: "is too short (minimum 3 characters)"}
 );
