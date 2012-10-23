@@ -55,6 +55,7 @@
 
     ENV['TESTING'] = true
 </script>
+
 </head>
 <body>
   <h1 id="qunit-header">QUnit Test Suite</h1>
@@ -93,7 +94,7 @@
   </script>
 
   <script type="text/javascript" src="ember-validations-tests.js"></script>
-
+  <script type="text/javascript" src="../lib/ember-data.js"></script>
   <script type="text/javascript">
     // hack qunit to not suck for Ember objects
     var originalTypeof = QUnit.jsDump.typeOf;
