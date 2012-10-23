@@ -1,20 +1,28 @@
+var checkValidity = function(model, value) {
+  equal(model.get('isValid'), value, "should set 'isValid' to " + value);
+};
+
 var modelClass, model, moduleOpts = {
   setup: function() {
     modelClass = Ember.Object.extend(Ember.Validations);
 
-    var validations = {
-      name: {
-        customPresence: {
-          validator: function(obj, attr, val) {
-            if (!val) {
-              obj.get('validationErrors').add(attr, "isEmpty");
-            }
-          }
+    var customPresenceValidator = {
+      validator: function(obj, attr, val) {
+        if (!val) {
+          obj.get('validationErrors').add(attr, "isEmpty");
         }
       }
     };
 
-    model = modelClass.create({validations: validations});
+    var validations = {
+      name: { customPresence: customPresenceValidator },
+      surname: { customPresence: customPresenceValidator }
+    };
+
+    model = modelClass.create({
+      validations: validations,
+      surname: 'foo'
+    });
   },
   teardown: function() {
     modelClass = null;
@@ -23,9 +31,13 @@ var modelClass, model, moduleOpts = {
 };
 module("Ember.Validations",moduleOpts);
 
-test("should set 'error' property", function() {
-  ok(Ember.ValidationErrors.detectInstance(model.get('validationErrors')), "'error' property should be an Ember.ValidationErrors");
+// validationErrors
+
+test("should set 'validationErrors' property", function() {
+  ok(Ember.ValidationErrors.detectInstance(model.get('validationErrors')), "'validationErrors' property should be an Ember.ValidationErrors");
 });
+
+// #validate method
 
 test("#validate should call #validate validator method", function() {
   model.validate();
@@ -35,13 +47,13 @@ test("#validate should call #validate validator method", function() {
 
 test("#validate should set 'isValid' property to false when invalid", function() {
   model.validate();
-  equal(model.get('isValid'), false, "should set 'isValid' to false");
+  checkValidity(model, false);
 });
 
 test("#validate should set 'isValid' property to true when valid", function() {
   model.set('name', 'ember');
   model.validate();
-  equal(model.get('isValid'), true, "should set 'isValid' to true");
+  checkValidity(model, true);
 });
 
 test("#validate should return false when invalid", function() {
@@ -60,12 +72,52 @@ test("#validate should remove previous errors", function() {
   equal(model.get('validationErrors').get('length'), 0, "should have no error");
 });
 
-test("#validation should notify errors property changed", function() {
+test("#validate should notify validationErrors property changed", function() {
   model.reopen({
     observer: Ember.observer(function() {
       ok(true, "errors has changed");
     }, 'validationErrors')
   });
   model.validate();
+  expect(1);
+});
+
+// #validateProperty method
+
+test("#validateProperty method should call #validate validator method", function() {
+  model.set('surname', null);
+  model.validateProperty('surname');
+  var surnameErrorsKeys = model.get('validationErrors.surname.keys');
+  deepEqual(surnameErrorsKeys, ["isEmpty"], "should call #validate validator method");
+  equal(model.get('validationErrors.length'), 1, "has validated only the property passed as argument");
+});
+
+test("#validateProperty should set 'isValid' property to false when invalid", function() {
+  model.validateProperty('name');
+  model.validate();
+  checkValidity(model, false);
+});
+
+test("#validateProperty should keep 'isValid' to false when there is other invalid property", function() {
+  model.validate();
+  model.validateProperty('surname');
+  model.validate();
+  checkValidity(model, false);
+});
+
+test("#validateProperty should set 'isValid' to true when the property checked was alone to be invalid", function() {
+  model.validate();
+  model.set('name', 'foo');
+  model.validateProperty('name');
+  checkValidity(model, true);
+});
+
+test("#validateProperty should notify validationErrors property changed", function() {
+  model.reopen({
+    observer: Ember.observer(function() {
+      ok(true, "errors has changed");
+    }, 'validationErrors')
+  });
+  model.validateProperty('surname');
   expect(1);
 });

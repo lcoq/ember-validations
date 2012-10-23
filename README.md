@@ -6,19 +6,13 @@ this library does it for you. You just have to declare which property you want t
 
 This library is inspired by the validations of the Ruby gem `ActiveRecord`.
 
-#### Is it "Production Ready"?
-
-No. The development has just started.
-
 #### Getting ember-validations
 
 Currently you must build ember-validations yourself. Clone the repository, run `bundle` then `rake dist`. You'll find `ember-validations.js` in the `dist` directory.
 
 #### Roadmap
 
-* One-property validation
 * Automatic validation option
-
 
 ## Validations
 
@@ -29,6 +23,7 @@ Here's how you define validations on an object:
 ``` javascript
 // the object should extend Ember.Validations mixin
 MyApp.User = Ember.Object.extend(Ember.Validations, {
+  country: 'France',
 
   // all property validations are set in an object 'validations'
   validations: {
@@ -40,12 +35,15 @@ MyApp.User = Ember.Object.extend(Ember.Validations, {
       presence: true
     },
 
-    // the next validation is used to check the numericality of the 'zipCode' property,
-    // and check that the length of this property is between 3 and 10.
+    // the next validation is used to check the numericality of the 'zipCode' property.
+    // note that a function can be passed to validator options
+    // (here, the option `moreThan` of the length validator)
     'address.zipCode': {
       numericality: true,
       length: {
-        moreThan: 3,
+        moreThan: function() {
+          return (this.get('country') === 'France') ? 5 : 1;
+        },
         lessThan: 10
       }
     },
@@ -78,11 +76,15 @@ MyApp.User = Ember.Object.extend(Ember.Validations, {
 // Later, you can call the 'validate' method to launch all properties validations.
 // It will add errors to the object if there are invalid properties.
 var aUser = MyApp.User.create();
-aUser.validate();
+aUser.validate(); // => false
 
 // Now, properties 'isValid' and 'isInvalid' are available
 aUser.get('isValid') // false
 aUser.get('isInvalid') // true, as expected(!)
+
+// You could also validate just one property:
+aUser.set('password', 'Foobar');
+aUser.validateProperty('password') // => true
 ```
 
 ## Errors
