@@ -42,7 +42,7 @@ MyApp.User = Ember.Object.extend(Ember.Validations, {
 
     // the next validation is used to check the numericality of the 'zipCode' property,
     // and check that the length of this property is between 3 and 10.
-    zipCode: {
+    'address.zipCode': {
       numericality: true,
       length: {
         moreThan: 3,
