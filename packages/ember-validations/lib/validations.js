@@ -133,7 +133,7 @@ Ember.Validations = Ember.Mixin.create(/**@scope Ember.Validations.prototype */{
       validator.validate(this, attribute, this.get(attribute));
     }
 
-    var isValid = get(this, 'validationErrors.' + attribute + '.length') === 0;
+    var isValid = !get(this, 'validationErrors.' + attribute + '.length');
     return isValid;
   },
 

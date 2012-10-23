@@ -92,16 +92,19 @@ test("#validateProperty method should call #validate validator method", function
   equal(model.get('validationErrors.length'), 1, "has validated only the property passed as argument");
 });
 
+test("#validateProperty returns true when the property is valid, false else", function() {
+  ok(model.validateProperty('surname'), "the property is valid");
+  ok(!model.validateProperty('name'), "the property is invalid");
+});
+
 test("#validateProperty should set 'isValid' property to false when invalid", function() {
   model.validateProperty('name');
-  model.validate();
   checkValidity(model, false);
 });
 
 test("#validateProperty should keep 'isValid' to false when there is other invalid property", function() {
   model.validate();
   model.validateProperty('surname');
-  model.validate();
   checkValidity(model, false);
 });
 
