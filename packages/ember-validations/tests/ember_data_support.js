@@ -10,33 +10,34 @@ module("Ember-data support", {
   setup: function() {
 
       Person = DS.Model.extend(Ember.Validations,{
-        bar: DS.attr('string'),
+        name: DS.attr('string'),
+        tel: DS.attr('string'),
 
         validations: {
-
           name: {
-
-            customPresence: {
+            presence: true
+          },
+          tel: {
+            normalize: {
               validator: function(obj, attr, val) {
-                if (!val) {
-                  obj.get('errors').add(attr, "isEmpty");
+                if (!val){
+                  obj.get('validationErrors').add(attr, "is empty");
+                } else if (!val.match(/^(?:0|\+?254)7\d{8}$/)) {
+                  obj.get('validationErrors').add(attr, "is invalid");
                 }
               }
             }
-
           }
-
         }
-
       });
 
       adapter = DS.Adapter.create({
         find: function(store, type, id) {
-          store.load(Person, 1, { id: 1, name: "Foo" });
+          store.load(Person, 1, { id: 1});
         },
         updateRecord: function(store, type, record) {
           equal(get(record, 'isSaving'), true, "record should be saving");
-          equal(get(record, 'isDirty'), false, "record should be dirty");
+          equal(get(record, 'isDirty'), true, "record should be dirty");
         }
       });
 
@@ -55,9 +56,10 @@ module("Ember-data support", {
 
 test("ember-data records can be validated", function() {
   person.validate();
-  //equal(model.get('isValid'), false, "should set 'isValid' to false");
-  //model.set('name', 'ember');
-  //model.validate();
-  //equal(model.get('isValid'), true, "should set 'isValid' to true");
+  equal(person.get('isValid'), false, "should set 'isValid' to false");
+  person.set('name', 'ember');
+  person.set('tel', '254700111222');
+  person.validate();
+  equal(person.get('isValid'), true, "should set 'isValid' to true");
   //store.commit();
 });
