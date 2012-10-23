@@ -6,19 +6,13 @@ this library does it for you. You just have to declare which property you want t
 
 This library is inspired by the validations of the Ruby gem `ActiveRecord`.
 
-#### Is it "Production Ready"?
-
-No. The development has just started.
-
 #### Getting ember-validations
 
 Currently you must build ember-validations yourself. Clone the repository, run `bundle` then `rake dist`. You'll find `ember-validations.js` in the `dist` directory.
 
 #### Roadmap
 
-* One-property validation
 * Automatic validation option
-
 
 ## Validations
 
@@ -29,6 +23,7 @@ Here's how you define validations on an object:
 ``` javascript
 // the object should extend Ember.Validations mixin
 MyApp.User = Ember.Object.extend(Ember.Validations, {
+  country: 'France',
 
   // all property validations are set in an object 'validations'
   validations: {
@@ -40,12 +35,15 @@ MyApp.User = Ember.Object.extend(Ember.Validations, {
       presence: true
     },
 
-    // the next validation is used to check the numericality of the 'zipCode' property,
-    // and check that the length of this property is between 3 and 10.
-    zipCode: {
+    // the next validation is used to check the numericality of the 'zipCode' property.
+    // note that a function can be passed to validator options
+    // (here, the option `moreThan` of the length validator)
+    'address.zipCode': {
       numericality: true,
       length: {
-        moreThan: 3,
+        moreThan: function() {
+          return (this.get('country') === 'France') ? 5 : 1;
+        },
         lessThan: 10
       }
     },
@@ -67,7 +65,7 @@ MyApp.User = Ember.Object.extend(Ember.Validations, {
       custom: {
         validator: function(object, attribute, value) {
           if (!value.match(/[A-Z]/)) {
-            this.get('errors').add(attribute, "does not contain capital letters");
+            this.get('validationErrors').add(attribute, "does not contain capital letters");
           }
         }
       }
@@ -78,16 +76,20 @@ MyApp.User = Ember.Object.extend(Ember.Validations, {
 // Later, you can call the 'validate' method to launch all properties validations.
 // It will add errors to the object if there are invalid properties.
 var aUser = MyApp.User.create();
-aUser.validate();
+aUser.validate(); // => false
 
 // Now, properties 'isValid' and 'isInvalid' are available
 aUser.get('isValid') // false
 aUser.get('isInvalid') // true, as expected(!)
+
+// You could also validate just one property:
+aUser.set('password', 'Foobar');
+aUser.validateProperty('password') // => true
 ```
 
 ## Errors
 
-Once the `validate` method is called, if some properties are invalid, the object property `errors` is updated.
+Once the `validate` method is called, if some properties are invalid, the object property `validationErrors` is updated.
 
 You can get the message error on each invalid property, as follow :
 
@@ -97,25 +99,25 @@ You can get the message error on each invalid property, as follow :
 
 // Using `fullMessages` property. Returns all error formatted.
 
-myUser.get('errors.fullMessages');
+myUser.get('validationErrors.fullMessages');
 // ["name can't be blank", "address.zipCode should have between 5 and 10 characters"]
-myUser.get('errors.name.fullMessages'); // ["can't be blank"]
-myUser.get('errors.address.zipCode.fullMessages'); // ["should have between 5 and 10 characters"]
+myUser.get('validationErrors.name.fullMessages'); // ["can't be blank"]
+myUser.get('validationErrors.address.zipCode.fullMessages'); // ["should have between 5 and 10 characters"]
 
 
 // Using `messages` property. Returns only error corresponding to the exact path
 
-myUser.get('errors.name.messages'); // ["can't be blank"]
-myUser.get('errors.adress.zipCode.messages'); // ["should have between 5 and 10 characters"]
-myUser.get('errors.messages'); // `undefined`, because there is no error at this path
+myUser.get('validationErrors.name.messages'); // ["can't be blank"]
+myUser.get('validationErrors.adress.zipCode.messages'); // ["should have between 5 and 10 characters"]
+myUser.get('validationErrors.messages'); // `undefined`, because there is no error at this path
 
 
 // Using `allMessages` property. Returns all errors, corresponding to the exact path and nested errors
 
-myUser.get('errors.name.allMesssages');
+myUser.get('validationErrors.name.allMesssages');
 // [["", "can't be blank"]]
 
-myUser.get('errors.allMessages'); 
+myUser.get('validationErrors.allMessages');
 // [["name", "can't be blank"], ["address.id", "should have between 5 and 10 characters"]]
 ```
 

@@ -54,7 +54,7 @@ Ember.Validators.NumericalityValidator = Ember.Validator.extend(/** @scope Ember
   validate: function(obj, attr, value) {
     var parsedValue = parseFloat(value),
         parsedInt = parseInt(value, 10),
-        errors = get(obj, 'errors');
+        errors = get(obj, 'validationErrors');
 
     if (isNaN(value) || isNaN(parsedValue)) {
       errors.add(attr, 'notNumber');
