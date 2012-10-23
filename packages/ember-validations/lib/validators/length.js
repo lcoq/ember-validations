@@ -23,7 +23,7 @@ Ember.Validators.LengthValidator = Ember.Validator.extend(/** @scope Ember.Valid
   /** @private */
   validate: function(obj, attr, value) {
     var options = get(this, 'options'),
-        errors = get(obj, 'errors'),
+        errors = get(obj, 'validationErrors'),
         length = value ? Ember.get(value, 'length') : 0,
         optionValue;
 

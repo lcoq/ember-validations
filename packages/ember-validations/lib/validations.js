@@ -59,7 +59,7 @@ var get = Ember.get, set = Ember.set;
                validator: function(obj, attr, value) {
                  var moreThan = this.get('options.moreThan');
                  if (value <= moreThan) {
-                   obj.get('errors').add(attr, "should not be falsy");
+                   obj.get('validationErrors').add(attr, "should not be falsy");
                  }
                },
                options: {
@@ -77,8 +77,8 @@ Ember.Validations = Ember.Mixin.create(/**@scope Ember.Validations.prototype */{
   /** @private */
   init: function() {
     this._super();
-    if (get(this, 'errors') === undefined) {
-      set(this, 'errors', Ember.ValidationErrors.create());
+    if (get(this, 'validationErrors') === undefined) {
+      set(this, 'validationErrors', Ember.ValidationErrors.create());
     }
   },
 
@@ -90,9 +90,9 @@ Ember.Validations = Ember.Mixin.create(/**@scope Ember.Validations.prototype */{
   */
   validate: function() {
     var validations = get(this, 'validations'),
-        errors = get(this, 'errors');
+        errors = get(this, 'validationErrors');
 
-    this.propertyWillChange('errors');
+    this.propertyWillChange('validationErrors');
 
     errors.clear();
 
@@ -109,10 +109,10 @@ Ember.Validations = Ember.Mixin.create(/**@scope Ember.Validations.prototype */{
       }
     }
 
-    var isValid = get(this, 'errors.length') === 0;
+    var isValid = get(this, 'validationErrors.length') === 0;
     set(this, 'isValid', isValid);
 
-    this.propertyDidChange('errors');
+    this.propertyDidChange('validationErrors');
     return isValid;
   }
 });

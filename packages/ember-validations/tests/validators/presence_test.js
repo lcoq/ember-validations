@@ -2,7 +2,7 @@ var get = Ember.get, set = Ember.set;
 
 var model, validator, moduleOpts = {
   setup: function() {
-    model = Ember.Object.create({errors: Ember.ValidationErrors.create()});
+    model = Ember.Object.create({validationErrors: Ember.ValidationErrors.create()});
     validator = Ember.Validators.PresenceValidator.create();
   },
   teardown: function() {
@@ -15,10 +15,10 @@ module("Ember.Validators.PresenceValidator", moduleOpts);
 test("should add error when the attribute is not present", function() {
   var invalidValues = [undefined, null, '', ' ', '  '];
   invalidValues.forEach(function(val, index) {
-    set(model, 'errors', Ember.ValidationErrors.create());
+    set(model, 'validationErrors', Ember.ValidationErrors.create());
     validator.validate(model, 'name', val);
 
-    var errors = get(model, 'errors.name');
+    var errors = get(model, 'validationErrors.name');
     ok(errors, "has a errors.name object");
 
     var errorKeys = get(errors, 'keys');
@@ -32,8 +32,8 @@ test("should add error when the attribute is not present", function() {
 
 test("should not add error when the attribute is present", function() {
   validator.validate(model, 'name', "my name");
-  equal(get(model, 'errors.name.keys'), undefined, "should not set 'name' error for string value");
+  equal(get(model, 'validationErrors.name.keys'), undefined, "should not set 'name' error for string value");
 
   validator.validate(model, 'name', 0);
-  equal(get(model, 'errors.name.keys'), undefined, "should not set 'name' error for value 0");
+  equal(get(model, 'validationErrors.name.keys'), undefined, "should not set 'name' error for value 0");
 });

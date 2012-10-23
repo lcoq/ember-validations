@@ -10,7 +10,7 @@
        App.TruthyValidator = Ember.Validator.extend({
          validate: function(obj, attr, value) {
            if (!value) {
-             obj.get('errors').add(attr, "should be truthy");
+             obj.get('validationErrors').add(attr, "should be truthy");
            }
          }
        });

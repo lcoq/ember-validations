@@ -20,7 +20,7 @@ Ember.ValidationError.addMessages({
 Ember.Validators.FormatValidator = Ember.Validator.extend({
   validate: function(obj, attr, value) {
     var options = get(this, 'options'),
-        errors = get(obj, 'errors'),
+        errors = get(obj, 'validationErrors'),
         optionValue;
 
     optionValue = this.optionValue(obj, 'with');
