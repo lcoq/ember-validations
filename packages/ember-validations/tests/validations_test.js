@@ -1,25 +1,20 @@
 var modelClass, model, moduleOpts = {
   setup: function() {
     modelClass = Ember.Object.extend(Ember.Validations);
-    model = modelClass.create({
 
-      validations: {
-
-        name: {
-
-          customPresence: {
-            validator: function(obj, attr, val) {
-              if (!val) {
-                obj.get('validationErrors').add(attr, "isEmpty");
-              }
+    var validations = {
+      name: {
+        customPresence: {
+          validator: function(obj, attr, val) {
+            if (!val) {
+              obj.get('validationErrors').add(attr, "isEmpty");
             }
           }
-
         }
-
       }
+    };
 
-    });
+    model = modelClass.create({validations: validations});
   },
   teardown: function() {
     modelClass = null;
