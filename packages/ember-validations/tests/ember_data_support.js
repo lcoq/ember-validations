@@ -61,5 +61,6 @@ test("ember-data records can be validated", function() {
   person.set('tel', '254700111222');
   person.validate();
   equal(person.get('isValid'), true, "should set 'isValid' to true");
-  //store.commit();
+  store.commit();
+  equal(person.get('isSaving'), true, "should be saving");
 });
