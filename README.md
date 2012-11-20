@@ -65,7 +65,7 @@ MyApp.User = Ember.Object.extend(Ember.Validations, {
       custom: {
         validator: function(object, attribute, value) {
           if (!value.match(/[A-Z]/)) {
-            this.get('validationErrors').add(attribute, "does not contain capital letters");
+            object.get('validationErrors').add(attribute, null, null, "does not contain capital letters");
           }
         }
       }
