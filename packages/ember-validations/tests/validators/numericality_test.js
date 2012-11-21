@@ -51,3 +51,7 @@ testBothValidities(
   "12",
   "11", {notEqual: "is not equal to 12"}
 );
+
+testNoError(
+  "allowBlank option", vClass, {allowBlank: true}, ""
+);

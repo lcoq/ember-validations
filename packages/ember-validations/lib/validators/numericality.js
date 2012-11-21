@@ -56,39 +56,42 @@ Ember.Validators.NumericalityValidator = Ember.Validator.extend(/** @scope Ember
         parsedInt = parseInt(value, 10),
         errors = get(obj, 'validationErrors');
 
-    if (isNaN(value) || isNaN(parsedValue)) {
-      errors.add(attr, 'notNumber');
-    } else {
-      var options = get(this, 'options');
-      if (options.onlyInteger === true && (parsedValue !== parsedInt)) {
-        errors.add(attr, 'notInteger');
-      }
+    var options = get(this, 'options');
+    if (!((options.allowBlank === true) && ((value ==="") || (value === null) || (value === undefined)))) {
 
-      var optionValue;
+      if (isNaN(value) || isNaN(parsedValue)) {
+        errors.add(attr, 'notNumber');
+      } else {
+        if (options.onlyInteger === true && (parsedValue !== parsedInt)) {
+          errors.add(attr, 'notInteger');
+        }
 
-      optionValue = this.optionValue(obj, 'greaterThan', 'number');
-      if (optionValue !== null && parsedValue <= optionValue) {
-        errors.add(attr, 'notGreaterThan', {value: optionValue});
-      }
+        var optionValue;
 
-      optionValue = this.optionValue(obj, 'greaterThanOrEqualTo', 'number');
-      if (optionValue !== null && parsedValue < optionValue) {
-        errors.add(attr, 'notGreaterThanOrEqualTo', {value: optionValue});
-      }
+        optionValue = this.optionValue(obj, 'greaterThan', 'number');
+        if (optionValue !== null && parsedValue <= optionValue) {
+          errors.add(attr, 'notGreaterThan', {value: optionValue});
+        }
 
-      optionValue = this.optionValue(obj, 'lessThan', 'number');
-      if (optionValue !== null && parsedValue >= optionValue) {
-        errors.add(attr, 'notLessThan', {value: optionValue});
-      }
+        optionValue = this.optionValue(obj, 'greaterThanOrEqualTo', 'number');
+        if (optionValue !== null && parsedValue < optionValue) {
+          errors.add(attr, 'notGreaterThanOrEqualTo', {value: optionValue});
+        }
 
-      optionValue = this.optionValue(obj, 'lessThanOrEqualTo', 'number');
-      if (optionValue !== null && parsedValue > optionValue) {
-        errors.add(attr, 'notLessThanOrEqualTo', {value: optionValue});
-      }
+        optionValue = this.optionValue(obj, 'lessThan', 'number');
+        if (optionValue !== null && parsedValue >= optionValue) {
+          errors.add(attr, 'notLessThan', {value: optionValue});
+        }
 
-      optionValue = this.optionValue(obj, 'equalTo', 'number');
-      if (optionValue !== null && parsedValue !== optionValue) {
-        errors.add(attr, 'notEqual', {value: optionValue});
+        optionValue = this.optionValue(obj, 'lessThanOrEqualTo', 'number');
+        if (optionValue !== null && parsedValue > optionValue) {
+          errors.add(attr, 'notLessThanOrEqualTo', {value: optionValue});
+        }
+
+        optionValue = this.optionValue(obj, 'equalTo', 'number');
+        if (optionValue !== null && parsedValue !== optionValue) {
+          errors.add(attr, 'notEqual', {value: optionValue});
+        }
       }
     }
   },
