@@ -50,8 +50,16 @@ Ember.ValidationError.addMessages({
  */
 Ember.Validators.NumericalityValidator = Ember.Validator.extend(/** @scope Ember.Validators.NumericalityValidator.prototype */{
 
-  /** @private */
   validate: function(obj, attr, value) {
+    if (this.shouldSkipValidations(obj, attr, value)) {
+      return false;
+    } else {
+      this._validate(obj, attr, value);
+    }
+  },
+
+  /** @private */
+  _validate: function(obj, attr, value) {
     var parsedValue = parseFloat(value),
         parsedInt = parseInt(value, 10),
         errors = get(obj, 'validationErrors');
@@ -99,5 +107,14 @@ Ember.Validators.NumericalityValidator = Ember.Validator.extend(/** @scope Ember
   isValidForOption: function(obj, option, condition) {
     var optionValue = this.optionValue(option);
     return optionValue !== null && condition.apply(obj, optionValue);
+  },
+
+  shouldSkipValidations: function(obj, attr, value) {
+    var options = get(this, 'options');
+    if (!((options.allowBlank === true) && ((value ==="") || (value === null) || (value === undefined)))) {
+      return false;
+    } else {
+      return true;
+    }
   }
 });
