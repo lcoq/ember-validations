@@ -21,7 +21,7 @@ Ember.ValidationError.addMessages({
 Ember.Validators.LengthValidator = Ember.Validator.extend(/** @scope Ember.Validators.LengthValidator */{
 
   /** @private */
-  validate: function(obj, attr, value) {
+  _validate: function(obj, attr, value) {
     var options = get(this, 'options'),
         errors = get(obj, 'validationErrors'),
         length = value ? Ember.get(value, 'length') : 0,
@@ -43,6 +43,15 @@ Ember.Validators.LengthValidator = Ember.Validator.extend(/** @scope Ember.Valid
       if (optionValue !== null && length > optionValue) {
         errors.add(attr, 'tooLongLength', {value: optionValue});
       }
+    }
+  },
+
+  shouldSkipValidations: function(obj, attr, value) {
+    var options = get(this, 'options');
+    if (!((options.allowBlank === true) && ((value ==="") || (value === null) || (value === undefined)))) {
+      return false;
+    } else {
+      return true;
     }
   }
 });

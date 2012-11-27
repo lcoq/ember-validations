@@ -11,7 +11,7 @@ Ember.ValidationError.addMessage('blank', "can't be blank");
    @extends Ember.Validator
 */
 Ember.Validators.PresenceValidator = Ember.Validator.extend({
-  validate: function(obj, attr, value) {
+  _validate: function(obj, attr, value) {
     var invalidValues = Ember.A([undefined, null]);
     if (invalidValues.contains(value) || (value.match && value.match(/^\s*$/))) {
       obj.get('validationErrors').add(attr, "blank");

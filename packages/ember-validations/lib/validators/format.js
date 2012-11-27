@@ -18,7 +18,7 @@ Ember.ValidationError.addMessages({
    @extends Ember.Validator
  */
 Ember.Validators.FormatValidator = Ember.Validator.extend({
-  validate: function(obj, attr, value) {
+  _validate: function(obj, attr, value) {
     var options = get(this, 'options'),
         errors = get(obj, 'validationErrors'),
         optionValue;
@@ -31,6 +31,15 @@ Ember.Validators.FormatValidator = Ember.Validator.extend({
     optionValue = this.optionValue(obj, 'without');
     if ((typeof optionValue === 'string' || optionValue instanceof RegExp) && value.match(optionValue)) {
       errors.add(attr, 'invalid');
+    }
+  },
+
+  shouldSkipValidations: function(obj, attr, value) {
+    var options = get(this, 'options');
+    if (!((options.allowBlank === true) && ((value ==="") || (value === null) || (value === undefined)))) {
+      return false;
+    } else {
+      return true;
     }
   }
 });

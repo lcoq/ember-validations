@@ -123,6 +123,12 @@ myUser.get('validationErrors.allMessages');
 
 There are also `keys`, `allKeys` properties that works like messages.
 
+## Skipping Validations
+
+The built in `format`, `length` and `numericality` validators have an
+`allowBlank` option which will cause validations to be skipped on blank
+data (a blank string) when set to true.
+
 # Building Ember-Validations
 
 1. Run `rake dist` task to build Ember-validations.js. Two builds will be placed in the `dist/` directory.

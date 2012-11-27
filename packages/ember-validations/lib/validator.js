@@ -31,7 +31,25 @@ Ember.Validator = Ember.Object.extend(/**@scope Ember.Validator.prototype */{
   },
 
   /**
-    Method used to determine whether subclass of `Ember.Validator` should call private method `_validate`.
+    This public method simply calls the `shouldSkipValidations` method and, if it returns true, then calls the private `_validate` function.
+     @param {Object} object
+      The object which contains the attribute that has to be validated
+     @param {String} attribute
+      The attribute path on which the validation should be done
+     @param {Object} value
+      The value of the attribute
+  */
+  validate: function(obj, attr, value) {
+    if (this.shouldSkipValidations(obj, attr, value)) {
+      return false;
+    } else {
+      this._validate(obj, attr, value);
+    }
+  },
+
+
+  /**
+    Method used to determine whether subclass of `Ember.Validator` should call private method `_validate`. Returns false by default so it is not necessary to implement it in sub-classes unless skipping of the validation is required for certain conditions.
      @param {Object} object
       The object which contains the attribute that has to be validated
      @param {String} attribute
@@ -43,7 +61,7 @@ Ember.Validator = Ember.Object.extend(/**@scope Ember.Validator.prototype */{
     return false;
   },
 
-  /**
+  /** @private
      Abstract method used to validate the attribute of an object.
 
      @param {Object} object
@@ -53,7 +71,7 @@ Ember.Validator = Ember.Object.extend(/**@scope Ember.Validator.prototype */{
      @param {Object} value
       The value of the attribute
   */
-  validate: function(obj, attr, value) {
+  _validate: function(obj, attr, value) {
     throw new Error("Ember.Validator subclasses should implement validate() method.");
   },
 

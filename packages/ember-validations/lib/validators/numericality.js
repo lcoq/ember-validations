@@ -50,14 +50,6 @@ Ember.ValidationError.addMessages({
  */
 Ember.Validators.NumericalityValidator = Ember.Validator.extend(/** @scope Ember.Validators.NumericalityValidator.prototype */{
 
-  validate: function(obj, attr, value) {
-    if (this.shouldSkipValidations(obj, attr, value)) {
-      return false;
-    } else {
-      this._validate(obj, attr, value);
-    }
-  },
-
   /** @private */
   _validate: function(obj, attr, value) {
     var parsedValue = parseFloat(value),
