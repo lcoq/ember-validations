@@ -32,14 +32,6 @@ Ember.Validators.FormatValidator = Ember.Validator.extend({
     if ((typeof optionValue === 'string' || optionValue instanceof RegExp) && value.match(optionValue)) {
       errors.add(attr, 'invalid');
     }
-  },
-
-  shouldSkipValidations: function(obj, attr, value) {
-    var options = get(this, 'options');
-    if (!((options.allowBlank === true) && ((value ==="") || (value === null) || (value === undefined)))) {
-      return false;
-    } else {
-      return true;
-    }
   }
+
 });

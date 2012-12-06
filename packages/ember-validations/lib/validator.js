@@ -49,7 +49,7 @@ Ember.Validator = Ember.Object.extend(/**@scope Ember.Validator.prototype */{
 
 
   /**
-    Method used to determine whether subclass of `Ember.Validator` should call private method `_validate`. Returns false by default so it is not necessary to implement it in sub-classes unless skipping of the validation is required for certain conditions.
+    Method used to determine whether subclass of `Ember.Validator` should call private method `_validate`. Returns true if the allowBlank option is set to true, so it is not necessary to implement it in sub-classes you would like to implement a different logic for the skipping of the validation.
      @param {Object} object
       The object which contains the attribute that has to be validated
      @param {String} attribute
@@ -57,7 +57,11 @@ Ember.Validator = Ember.Object.extend(/**@scope Ember.Validator.prototype */{
      @param {Object} value
       The value of the attribute
   */
-  shouldSkipValidations: function(object, attr, value) {
+  shouldSkipValidations: function(obj, attr, value) {
+    var options = Ember.get(this, 'options');
+    if (options.allowBlank === true) {
+      return value ==="" || value === null || value === undefined;
+    }
     return false;
   },
 

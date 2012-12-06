@@ -44,14 +44,6 @@ Ember.Validators.LengthValidator = Ember.Validator.extend(/** @scope Ember.Valid
         errors.add(attr, 'tooLongLength', {value: optionValue});
       }
     }
-  },
-
-  shouldSkipValidations: function(obj, attr, value) {
-    var options = get(this, 'options');
-    if (!((options.allowBlank === true) && ((value ==="") || (value === null) || (value === undefined)))) {
-      return false;
-    } else {
-      return true;
-    }
   }
+
 });
