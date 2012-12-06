@@ -125,9 +125,10 @@ There are also `keys`, `allKeys` properties that works like messages.
 
 ## Skipping Validations
 
-The built in `format`, `length` and `numericality` validators have an
-`allowBlank` option which will cause validations to be skipped on blank
-data (a blank string) when set to true.
+Validators will skip validations on blank values when the `allowBlank` option is set to
+`true`. The `PresenceValidator` ignores this option for obvious reasons.
+You may override the `shouldSkipValidations` method in you custom
+`Validator` objects to change this behaviour.
 
 # Building Ember-Validations
 
