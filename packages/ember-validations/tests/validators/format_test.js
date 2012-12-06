@@ -33,3 +33,7 @@ testBothValidities(
   "bdef",
   "abcdef", {invalid: "is invalid"}
 );
+
+testNoError(
+  "allowBlank option", vClass, {allowBlank:true, 'with': "abc"}, ""
+);
