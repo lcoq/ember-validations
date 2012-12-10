@@ -18,7 +18,7 @@ Ember.ValidationError.addMessages({
    @extends Ember.Validator
  */
 Ember.Validators.FormatValidator = Ember.Validator.extend({
-  validate: function(obj, attr, value) {
+  _validate: function(obj, attr, value) {
     var options = get(this, 'options'),
         errors = get(obj, 'validationErrors'),
         optionValue;
@@ -33,4 +33,5 @@ Ember.Validators.FormatValidator = Ember.Validator.extend({
       errors.add(attr, 'invalid');
     }
   }
+
 });

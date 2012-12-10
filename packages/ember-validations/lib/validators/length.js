@@ -21,7 +21,7 @@ Ember.ValidationError.addMessages({
 Ember.Validators.LengthValidator = Ember.Validator.extend(/** @scope Ember.Validators.LengthValidator */{
 
   /** @private */
-  validate: function(obj, attr, value) {
+  _validate: function(obj, attr, value) {
     var options = get(this, 'options'),
         errors = get(obj, 'validationErrors'),
         length = value ? Ember.get(value, 'length') : 0,
@@ -45,4 +45,5 @@ Ember.Validators.LengthValidator = Ember.Validator.extend(/** @scope Ember.Valid
       }
     }
   }
+
 });
