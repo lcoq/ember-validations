@@ -37,3 +37,8 @@ testBothValidities(
 testNoError(
   "allowBlank option", vClass, {allowBlank:true, 'with': "abc"}, ""
 );
+
+testHasErrors(
+  "empty property value", vClass, {'with': /foo/},
+  undefined, {invalid: "is invalid"}
+);

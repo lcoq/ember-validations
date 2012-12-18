@@ -23,6 +23,10 @@ Ember.Validators.FormatValidator = Ember.Validator.extend({
         errors = get(obj, 'validationErrors'),
         optionValue;
 
+    if (!value || typeof value.match !== 'function') {
+      value = "";
+    }
+
     optionValue = this.optionValue(obj, 'with');
     if ((typeof optionValue === 'string' || optionValue instanceof RegExp) && !value.match(optionValue)) {
       errors.add(attr, 'invalid');
