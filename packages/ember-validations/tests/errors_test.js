@@ -136,3 +136,9 @@ test("get fullMessages should return formatted messages", function() {
   errors.add('address.city', 'lengthTooLong', {length: 20});
   deepEqual(get(errors, 'fullMessages'), expected, "has 'lengthTooLong' message");
 });
+
+test("can get nested errors inside a 'content' property", function() {
+  var expected = ['content.title can not be blank'];
+  errors.add('content.title', 'cantBeBlank');
+  deepEqual(get(errors, 'fullMessages'), expected, "has 'cantBeBlank' message");
+});

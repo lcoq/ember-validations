@@ -8,8 +8,8 @@ var get = Ember.get, set = Ember.set;
 
  */
 Ember.ValidationErrors = Ember.Object.extend(/** @scope Ember.ValidationErrors.prototype */{
-  nestedErrors: null,
-  content: null,
+  _nestedErrors: null,
+  _content: null,
 
   /** @private */
   init: function() {
@@ -81,7 +81,7 @@ Ember.ValidationErrors = Ember.Object.extend(/** @scope Ember.ValidationErrors.p
     @property
   */
   keys: Ember.computed(function() {
-    var content = get(this, 'content'), keys = Ember.A();
+    var content = get(this, '_content'), keys = Ember.A();
     content.forEach(function(error) { keys.push(error.get('key')); });
     return keys;
   }).property('length').cacheable(),
@@ -96,7 +96,7 @@ Ember.ValidationErrors = Ember.Object.extend(/** @scope Ember.ValidationErrors.p
     @property
    */
   messages: Ember.computed(function() {
-    var content = get(this, 'content'), messages = Ember.A();
+    var content = get(this, '_content'), messages = Ember.A();
     content.forEach(function(error) { messages.push(error.get('message')); });
     return messages;
   }).property('length').cacheable(),
@@ -108,8 +108,8 @@ Ember.ValidationErrors = Ember.Object.extend(/** @scope Ember.ValidationErrors.p
    */
   length: Ember.computed(function() {
     var length = 0,
-        content = get(this, 'content'),
-        errors = get(this, 'nestedErrors');
+        content = get(this, '_content'),
+        errors = get(this, '_nestedErrors');
 
     length += content.length;
     errors.forEach(function(nestedErrorsPath, nestedErrors) { length += get(nestedErrors, 'length'); });
@@ -118,7 +118,7 @@ Ember.ValidationErrors = Ember.Object.extend(/** @scope Ember.ValidationErrors.p
 
   /** @private */
   unknownProperty: function(key) {
-    var errors = get(this, 'nestedErrors');
+    var errors = get(this, '_nestedErrors');
     return errors.get(key);
   },
 
@@ -144,7 +144,7 @@ Ember.ValidationErrors = Ember.Object.extend(/** @scope Ember.ValidationErrors.p
         customMessage: customMessage,
         messageFormat: format
       });
-      get(this, 'content').pushObject(error);
+      get(this, '_content').pushObject(error);
 
     } else {
       var attrPaths = this._pathsForAttribute(attributePath);
@@ -169,7 +169,7 @@ Ember.ValidationErrors = Ember.Object.extend(/** @scope Ember.ValidationErrors.p
     if (!attributePath) {
       this._resetErrors();
     } else {
-      var nestedErrors = get(this, 'nestedErrors'),
+      var nestedErrors = get(this, '_nestedErrors'),
           attrPaths = this._pathsForAttribute(attributePath);
       var errors = nestedErrors.get(attrPaths['path']);
       if (errors) {
@@ -190,7 +190,7 @@ Ember.ValidationErrors = Ember.Object.extend(/** @scope Ember.ValidationErrors.p
 
   /** @private */
   _getOrCreateNestedErrors: function(path) {
-    var nestedErrors = get(this, 'nestedErrors');
+    var nestedErrors = get(this, '_nestedErrors');
     var errors = nestedErrors.get(path);
     if (!errors) {
       errors = Ember.ValidationErrors.create();
@@ -210,8 +210,8 @@ Ember.ValidationErrors = Ember.Object.extend(/** @scope Ember.ValidationErrors.p
 
   /** @private */
   _resetErrors: function() {
-    set(this, 'content', Ember.A());
-    set(this, 'nestedErrors', Ember.Map.create());
+    set(this, '_content', Ember.A());
+    set(this, '_nestedErrors', Ember.Map.create());
   },
 
 
@@ -221,7 +221,7 @@ Ember.ValidationErrors = Ember.Object.extend(/** @scope Ember.ValidationErrors.p
         data = Ember.A();
     directData.forEach(function(singleData) { data.push(['', singleData]); });
 
-    var nestedErrors = get(this, 'nestedErrors');
+    var nestedErrors = get(this, '_nestedErrors');
     nestedErrors.forEach(function(path, errors) {
       var allErrorsDataPath = 'all' + dataName[0].toUpperCase() + dataName.slice(1);
       var allErrorsData = errors.get(allErrorsDataPath);
