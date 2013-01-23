@@ -1,5 +1,5 @@
 
-# Ember Validations
+# Ember Validations [![Build Status](https://secure.travis-ci.org/lcoq/ember-validations.png?branch=master)](http://travis-ci.org/lcoq/ember-validations)
 
 Ember-validations is a Ember.js library that can handle object validations. If you have to check the validity of object properties, 
 this library does it for you. You just have to declare which property you want to validate, and which kind of validation you want for this property.
