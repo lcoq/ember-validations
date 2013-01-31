@@ -160,8 +160,6 @@ therubyracer`.
 2. Run `rake test` to run a basic test suite or run `rake test[all]` to
    run a more comprehensive suite.
 
-NOTE: There is a QUnit-runner available at `tests/qunit/run-qunit.js`
-
 # Build API Docs
 
 NOTE: Require `node.js` to generate it.
