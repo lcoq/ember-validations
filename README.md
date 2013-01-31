@@ -10,10 +10,6 @@ This library is inspired by the validations of the Ruby gem `ActiveRecord`.
 
 Currently you must build ember-validations yourself. Clone the repository, run `bundle` then `rake dist`. You'll find `ember-validations.js` in the `dist` directory.
 
-#### Roadmap
-
-* Automatic validation option
-
 ## Validations
 
 Use validations to check the properties validity on an object.
