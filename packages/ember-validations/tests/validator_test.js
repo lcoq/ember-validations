@@ -13,7 +13,7 @@ test("Should set 'options' property after create", function() {
 });
 
 test("Direct instances should raise an error on validate", function() {
-  raises(function() { validator.validate(); },  /Ember.Validator subclasses should implement validate\(\) method./);
+  raises(function() { validator.validate(); },  /Ember.Validator subclasses should implement _validate\(\) method./);
 });
 
 test("checkValidity should be called on #init if set", function() {

@@ -76,7 +76,7 @@ Ember.Validator = Ember.Object.extend(/**@scope Ember.Validator.prototype */{
       The value of the attribute
   */
   _validate: function(obj, attr, value) {
-    throw new Error("Ember.Validator subclasses should implement validate() method.");
+    throw new Error("Ember.Validator subclasses should implement _validate() method.");
   },
 
   /**
