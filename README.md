@@ -10,123 +10,307 @@ This library is inspired by the validations of the Ruby gem `ActiveRecord`.
 
 Currently you must build ember-validations yourself. Clone the repository, run `bundle` then `rake dist`. You'll find `ember-validations.js` in the `dist` directory.
 
-## Validations
+## Example
 
-Use validations to check the properties validity on an object.
-
-Here's how you define validations on an object:
-
-``` javascript
-// the object should extend Ember.Validations mixin
-MyApp.User = Ember.Object.extend(Ember.Validations, {
-  country: 'France',
-
-  // all property validations are set in an object 'validations'
+```js
+App.User = Ember.Object.extend( Ember.Validations, {
+  country: null,
+  
   validations: {
-
-    // the next validation is used to check the presence of the 'name' property.
-    // the library will automatically find the `Ember.Validator` called `PresenceValidator`
-    // in the namespace `Ember.Validators`
     name: {
       presence: true
     },
-
-    // the next validation is used to check the numericality of the 'zipCode' property.
-    // note that a function can be passed to validator options
-    // (here, the option `moreThan` of the length validator)
-    'address.zipCode': {
+    age: {
       numericality: true,
       length: {
-        moreThan: function() {
-          return (this.get('country') === 'France') ? 5 : 1;
-        },
-        lessThan: 10
-      }
+          moreThan: 21,
+          lessThan: 99
+      },
     },
-
-    // the next validation use a custom validator (that extends Ember.Validator)
-    // 'custom' is an arbitrary name for the validation
     email: {
-      custom: {
-        validator: MyApp.EmailValidator,
-        options: {
-          domain: 'gmail'
-        }
-      }
-    },
-
-    // the next validation use a on-the-fly validator
-    // (corresponding to the `validate` method of an Ember.Validator)
-    password: {
-      custom: {
-        validator: function(object, attribute, value) {
-          if (!value.match(/[A-Z]/)) {
-            object.get('validationErrors').add(attribute, null, null, "does not contain capital letters");
-          }
-        }
-      }
+      format: /.+@.+\..{2,4}/
     }
   }
 });
+```
 
-// Later, you can call the 'validate' method to launch all properties validations.
-// It will add errors to the object if there are invalid properties.
-var aUser = MyApp.User.create();
-aUser.validate(); // => false
+## Usage
 
-// Now, properties 'isValid' and 'isInvalid' are available
-aUser.get('isValid') // false
-aUser.get('isInvalid') // true, as expected(!)
+* Extend `Ember.Validations` mixin:
 
-// You could also validate just one property:
-aUser.set('password', 'Foobar');
-aUser.validateProperty('password') // => true
+```js
+App.User = Ember.Object.extend( Ember.Validations );
+```
+
+* Define its validations by settings them in its `validation` property.
+The following example is a `presence` validation that ensures the `name` of the `User` is set:
+
+```js
+App.User = Ember.Object.extend( Ember.Validations, {
+  validations: {
+    name: {
+      presence: true
+    }
+  }
+});
+```
+
+* Launch validations on an object using the `validate` method.
+
+```js
+var user = App.User.create();
+user.validate();
+```
+
+* The `isValid` property is now set as `true`, or `false` depending on the validations result:
+
+```js
+user.get('isValid'); // => false
 ```
 
 ## Errors
 
-Once the `validate` method is called, if some properties are invalid, the object property `validationErrors` is updated.
+Once the `validate` method is called, if some properties are invalid, the `validationErrors` property is updated.
 
-You can get the message error on each invalid property, as follow :
+For the example below, we assume we have a `User` defined like this:
 
-``` javascript
-// Given a presence error on the 'name' property, and a length error on the 'address.zipCode' property
-
-
-// Using `fullMessages` property. Returns all error formatted.
-
-myUser.get('validationErrors.fullMessages');
-// ["name can't be blank", "address.zipCode should have between 5 and 10 characters"]
-myUser.get('validationErrors.name.fullMessages'); // ["can't be blank"]
-myUser.get('validationErrors.address.zipCode.fullMessages'); // ["should have between 5 and 10 characters"]
-
-
-// Using `messages` property. Returns only error corresponding to the exact path
-
-myUser.get('validationErrors.name.messages'); // ["can't be blank"]
-myUser.get('validationErrors.adress.zipCode.messages'); // ["should have between 5 and 10 characters"]
-myUser.get('validationErrors.messages'); // `undefined`, because there is no error at this path
-
-
-// Using `allMessages` property. Returns all errors, corresponding to the exact path and nested errors
-
-myUser.get('validationErrors.name.allMesssages');
-// [["", "can't be blank"]]
-
-myUser.get('validationErrors.allMessages');
-// [["name", "can't be blank"], ["address.id", "should have between 5 and 10 characters"]]
+```js
+App.User = Ember.Object.extend( Ember.Validations, {
+  validations: {
+    name: {
+      presence: true
+    },
+    age: {
+      numericality: {
+        moreThanOrEqualTo: 21,
+        lessThan: 99
+      }
+    },
+    'address.zipCode': {
+      numericality: true
+    }
+  }
+});
 ```
 
-There are also `keys`, `allKeys` properties that works like messages.
+An error is defined by a `key`, a `message`, and a `path`.
+There are three types of error messages:
 
-## Skipping Validations
+* `allMessages`: It returns all errors. Each of them is an array that contains the `path` and the `message` error, as follows:
 
-Validators will skip validations on blank values when the `allowBlank` option is set to
-`true`. The `PresenceValidator` ignores this option for obvious reasons.
-You may override the `shouldSkipValidations` method in you custom
-`Validator` objects to change this behaviour.
+```js
+user.get('validationErrors.allMessages');
+```
 
-# Building Ember-Validations
+Will return this array:
+
+```js
+[
+  [ "name", "can't be blank" ],
+  [ "age", "is not greater than or equal to 21" ],
+  [ "age", "is not less than 99" ],
+  [ "address.zipCode", "is not a number" ]
+]
+```
+
+* `fullMessages`: It has the same behaviour as `allMessages`, except that errors are the `path` and the `message` concatenated:
+
+```js
+[
+  "name can't be blank", 
+  "age is not greater than or equal to 21",
+  "age is not less than 99",
+  "address.zipCode is not a number"
+]
+```
+
+* `messages`: It returns only errors messages corresponding the path specified (`age` here):
+
+```js
+user.get('validationErrors.age.message');
+```
+
+Will return this array:
+
+```js
+[
+  "is not greater than or equal to 21",
+  "is not less than 99"
+]
+```
+
+*Remark: There are also `keys` and `allKeys` properties that works like messages, but for error keys.*
+
+## Validators
+
+### Presence
+
+It ensures the attribute is not blank.
+You can define it as follow, in the `validation` property:
+
+```js
+name: {
+  presence: true
+}
+```
+
+### Length
+
+The `length` validation is used to check the `length` of the property.
+Three options can be passed:
+
+* `minimum`
+* `is`
+* `maximum`
+
+Example:
+
+```js
+password: {
+  length: {
+    minimum: 6,
+    maximum: 12
+  }
+}
+```
+
+When no option is specified, the `is` option is set by default:
+
+```js
+phone: {
+  length: 10
+}
+```
+
+Is equivalent to:
+
+```js
+phone: {
+  length: {
+    is: 10
+  }
+}
+```
+
+### Numericality
+
+The `numericality` validation can have multiple usage, defined by its option:
+
+* `onlyInteger`
+* `greaterThan`
+* `greaterThanOrEqualTo`
+* `lessThan`
+* `lessThanOrEqualTo`
+* `equalTo`
+
+Example:
+
+```js
+amount: {
+  numericality: {
+    moreThanOrEqualTo: 1,
+    lessThan: 100
+  }
+}
+```
+
+When no option is passed, it just add an error if the value can not be parsed as a number (e.g. when the value contains letter):
+
+```js
+amount: {
+  numericality: true
+}
+```
+
+### Format
+
+It validates whether the attribute has (or not, depending on the option specified) the supplied regexp.
+
+The simplest way to use it is as follow:
+
+```js
+email: {
+  format: /.+@.+\..{2,4}/
+}
+```
+
+But you can specify options `with` and/or `without`:
+
+```js
+password: {
+  format: {
+    with: /[a-zA-Z]+/,
+    without: /[0-9]+/
+  }
+}
+```
+
+## Single property validation
+
+Sometime you could want to validate only one property.
+You can do this by calling `validateProperty('attributeName')` instead of `validate()`.
+It will also update the `isValid` property if the validity of the object changes.
+
+## Runtime validations
+
+A function can be passed to the validations options for runtime validations.
+An example could be:
+
+```js
+age: {
+  length: {
+    moreThan: function() {
+      return this.get('country') === 'France' ? 18 : 21;
+    }
+  }
+}
+```
+
+## Skipping validations
+
+Validators will, by default, skip validations on blank values. 
+The `presence` validation ignores this option for obvious reasons.
+
+You can disable this behaviour by setting the `allowBlank` option to `false`.
+
+## Custom validations
+
+### On-the-fly
+
+You can define custom validation function, like this:
+
+```js
+password: {
+  myCustomValidator: function(object, attribute, value) {
+    if (!value.match(/[A-Z])) {
+      object.get('validationErrors').add(attribute, 'invalid');
+    }
+  }
+}
+```
+
+### Write your own validator
+
+You can write your own validator easily.
+
+* Define your validator in the `Ember.Validators` namespace. It allows to use via its name.
+For example, writing an `Ember.Validators.FooValidator` allows you to use it using:
+
+```js
+validations: {
+  name: {
+    foo: true
+  }
+}
+```
+
+* Extend `Ember.Validator` and implement the `_validate` method. 
+Just take a look at the existing validators to see how to write it.
+
+* That's all folks!
+
+
+## Building Ember-Validations
 
 1. Run `rake dist` task to build Ember-validations.js. Two builds will be placed in the `dist/` directory.
   * `ember-validations.js` is a unminified version (generally used for development)
@@ -136,10 +320,25 @@ If you are building under Linux, you will need a JavaScript runtime for
 minification. You can either install nodejs or `gem install
 therubyracer`.
 
+## Build API Docs
 
-# How to run Unit Tests
+NOTE: Require `node.js` to generate it.
 
-## Setup
+### Preview API documentation
+
+Run `rake docs:preview`.
+
+The `docs:preview` task will build the documentation and make it available at <http://localhost:9292/index.html>
+
+### Build API documentation
+
+Run `rake docs:build`
+
+The  HTML documentation is built in the `docs` directory
+
+## How to run Unit Tests
+
+### Setup
 
 1. Install Ruby 1.9.2+. There are many resources on the web can help; one of the best is [rvm](https://rvm.io/).
 
@@ -147,31 +346,15 @@ therubyracer`.
 
 3. Run `bundle` inside the project root to install the gem dependencies.
 
-## In Your Browser
+### In Your Browser
 
 1. To start the development server, run `rackup`.
 
 2. Then visit: `http://localhost:9292/tests/index.html
 
-## From the CLI
+### From the CLI
 
 1. Install phantomjs from http://phantomjs.org
 
 2. Run `rake test` to run a basic test suite or run `rake test[all]` to
    run a more comprehensive suite.
-
-# Build API Docs
-
-NOTE: Require `node.js` to generate it.
-
-## Preview API documentation
-
-* run `rake docs:preview`
-
-* The `docs:preview` task will build the documentation and make it available at <http://localhost:9292/index.html>
-
-## Build API documentation
-
-* run `rake docs:build`
-
-* HTML documentation is built in the `docs` directory

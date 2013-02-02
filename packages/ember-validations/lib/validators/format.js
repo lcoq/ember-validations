@@ -15,7 +15,7 @@ Ember.ValidationError.addMessages({
     - `with` - The value must match this pattern
     - `without` - The value must not match this pattern
 
-    The simple way to use the `FormatValidator` is to set the validation to a `String`, or
+    The simplest way to use the `FormatValidator` is to set the validation to a `String`, or
     a `RegExp`:
 
         validations: {
