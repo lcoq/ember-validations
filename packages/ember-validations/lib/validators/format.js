@@ -15,6 +15,16 @@ Ember.ValidationError.addMessages({
     - `with` - The value must match this pattern
     - `without` - The value must not match this pattern
 
+    The simple way to use the `FormatValidator` is to set the validation to a `String`, or
+    a `RegExp`:
+
+        validations: {
+          email: {
+            format: /.+@.+\..{2,4}/
+          }
+        }
+
+
    @extends Ember.Validator
  */
 Ember.Validators.FormatValidator = Ember.Validator.extend({
@@ -27,7 +37,7 @@ Ember.Validators.FormatValidator = Ember.Validator.extend({
       value = "";
     }
 
-    optionValue = this.optionValue(obj, 'with');
+    optionValue = this.optionValue(obj, 'with') || this.optionValue(obj, 'value');
     if ((typeof optionValue === 'string' || optionValue instanceof RegExp) && !value.match(optionValue)) {
       errors.add(attr, 'invalid');
     }
