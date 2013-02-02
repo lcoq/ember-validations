@@ -28,6 +28,12 @@ testBothValidities(
   "12", {wrongLength: "is the wrong length (should be 3 characters)"}
 );
 
+testBothValidities(
+  "with value option", vClass, {value: 3},
+  "abc",
+  "ab", {wrongLength: "is the wrong length (should be 3 characters)"}
+);
+
 testNoError(
   "allowBlank option", vClass, {allowBlank: true, minimum: 3}, ""
 );

@@ -14,7 +14,26 @@ Ember.ValidationError.addMessages({
    Options:
 
     - `minimum` - The value must have at least this length
+    - `is` - The value must equal this length
     - `maximum` - The value must have at most this length
+
+    When passing a number as option to the validation, it will use it as the `is` option:
+
+        validations: {
+          zipCode: {
+            length: 5
+          }
+        }
+
+    Another implementation could be:
+
+        validations: {
+          zipCode: {
+            length: {
+              is: 5
+            }
+          }
+        }
 
    @extends Ember.Validator
  */
@@ -28,6 +47,10 @@ Ember.Validators.LengthValidator = Ember.Validator.extend(/** @scope Ember.Valid
         optionValue;
 
     optionValue = this.optionValue(obj, 'is', 'number');
+    if (optionValue === null) {
+      optionValue = this.optionValue(obj, 'value', 'number');
+    }
+
     if (optionValue !== null) {
       if (length !== optionValue) {
         errors.add(attr, 'wrongLength', {value: optionValue});

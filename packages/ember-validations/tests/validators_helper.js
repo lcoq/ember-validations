@@ -30,7 +30,7 @@ testHasErrors = function(testName, validatorClass, validatorOptions, value, expe
     var errorKeys = get(model, 'validationErrors.foo.keys'),
         errorMsgs = get(model, 'validationErrors.foo.messages');
     ok(Ember.isArray(errorKeys), "has keys for error path 'validationErrors.foo.keys'");
-    ok(Ember.isArray(errorMsgs), "has messages for error path 'validationErrors.foo.messages");
+    ok(Ember.isArray(errorMsgs), "has messages for error path 'validationErrors.foo.messages'");
 
     for (var expectedErrorKey in expectedErrors) {
       if (!expectedErrors.hasOwnProperty(expectedErrorKey)) continue;
