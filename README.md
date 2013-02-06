@@ -1,4 +1,3 @@
-
 # Ember Validations [![Build Status](https://secure.travis-ci.org/lcoq/ember-validations.png?branch=master)](http://travis-ci.org/lcoq/ember-validations)
 
 Ember-validations is a Ember.js library that can handle object validations. If you have to check the validity of object properties, 
@@ -282,7 +281,7 @@ You can define custom validation function, like this:
 ```js
 password: {
   myCustomValidator: function(object, attribute, value) {
-    if (!value.match(/[A-Z])) {
+    if (!value.match(/[A-Z]/)) {
       object.get('validationErrors').add(attribute, 'invalid');
     }
   }
