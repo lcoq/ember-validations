@@ -126,7 +126,7 @@ Will return this array:
 * `messages`: It returns only errors messages corresponding the path specified (`age` here):
 
 ```js
-user.get('validationErrors.age.message');
+user.get('validationErrors.age.messages');
 ```
 
 Will return this array:
