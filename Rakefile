@@ -1,4 +1,4 @@
-abort "Please use Ruby 1.9 or greater to build Ember.js!" if Gem::Version.new(RUBY_VERSION) < Gem::Version.new('1.9')
+abort "Please use Ruby 1.9 or greater to build ember-validations.js!" if Gem::Version.new(RUBY_VERSION.dup) < Gem::Version.new('1.9')
 
 require 'bundler/setup'
 require 'rake-pipeline'
