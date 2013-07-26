@@ -280,9 +280,11 @@ You can define custom validation function, like this:
 
 ```js
 password: {
-  myCustomValidator: function(object, attribute, value) {
-    if (!value.match(/[A-Z]/)) {
-      object.get('validationErrors').add(attribute, 'invalid');
+  myCustomValidator: {
+    validator: function(object, attribute, value) {
+      if (!value.match(/[A-Z]/)) {
+        object.get('validationErrors').add(attribute, 'invalid');
+      }
     }
   }
 }
