@@ -1,6 +1,6 @@
 # Ember Validations [![Build Status](https://secure.travis-ci.org/lcoq/ember-validations.png?branch=master)](http://travis-ci.org/lcoq/ember-validations)
 
-Ember-validations is a Ember.js library that can handle object validations. If you have to check the validity of object properties, 
+Ember-validations is a Ember.js library that can handle object validations. If you have to check the validity of object properties,
 this library does it for you. You just have to declare which property you want to validate, and which kind of validation you want for this property.
 
 This library is inspired by the validations of the Ruby gem `ActiveRecord`.
@@ -14,7 +14,7 @@ Currently you must build ember-validations yourself. Clone the repository, run `
 ```js
 App.User = Ember.Object.extend( Ember.Validations, {
   country: null,
-  
+
   validations: {
     name: {
       presence: true
@@ -116,7 +116,7 @@ Will return this array:
 
 ```js
 [
-  "name can't be blank", 
+  "name can't be blank",
   "age is not greater than or equal to 21",
   "age is not less than 99",
   "address.zipCode is not a number"
@@ -244,6 +244,29 @@ password: {
 }
 ```
 
+### Match
+
+It validates whether the contents of 2 fields are the same
+
+There is only 1 option:
+
+* `field`
+
+Example:
+
+```js
+password: {
+  match: {
+    field: {
+      "confirmPassword"
+    }
+  }
+},
+confirmPassword: {
+  ....
+}
+```
+
 ## Single property validation
 
 Sometime you could want to validate only one property.
@@ -267,7 +290,7 @@ age: {
 
 ## Skipping validations
 
-Validators will, by default, skip validations on blank values. 
+Validators will, by default, skip validations on blank values.
 The `presence` validation ignores this option for obvious reasons.
 
 You can disable this behaviour by setting the `allowBlank` option to `false`.
@@ -305,7 +328,7 @@ validations: {
 }
 ```
 
-* Extend `Ember.Validator` and implement the `_validate` method. 
+* Extend `Ember.Validator` and implement the `_validate` method.
 Just take a look at the existing validators to see how to write it.
 
 * That's all folks!
