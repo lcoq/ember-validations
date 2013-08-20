@@ -257,7 +257,7 @@ Example:
 ```js
 password: {
   match: {
-    field: {
+    property: {
       "confirmPassword"
     }
   }
