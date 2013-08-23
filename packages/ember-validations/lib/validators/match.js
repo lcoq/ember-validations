@@ -7,7 +7,7 @@ Ember.ValidationError.addMessages({
 /**
    @class
 
-   Validates whether the attribute matches the other specified attribute.
+   Validates whether the property matches the other specified property.
 
    Options:
 

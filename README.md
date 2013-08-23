@@ -246,11 +246,11 @@ password: {
 
 ### Match
 
-It validates whether the contents of 2 fields are the same
+It validates whether the contents of 2 properties are the same
 
 There is only 1 option:
 
-* `field`
+* `match`
 
 Example:
 
