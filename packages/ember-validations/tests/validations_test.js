@@ -19,9 +19,16 @@ var modelClass, model, moduleOpts = {
       surname: { customPresence: customPresenceValidator }
     };
 
+    var fooValidations = {
+      age: { customPresence: customPresenceValidator },
+      height: { customPresence: customPresenceValidator }
+    };
+
     model = modelClass.create({
       validations: validations,
-      surname: 'foo'
+      fooValidations: fooValidations,
+      surname: 'foo',
+      height: 'bar'
     });
   },
   teardown: function() {
@@ -79,6 +86,56 @@ test("#validate should notify validationErrors property changed", function() {
     }, 'validationErrors')
   });
   model.validate();
+  expect(1);
+});
+
+// #validateContext
+
+test("#validateContext() should set 'isValid' property to false when invalid", function() {
+  model.validateContext();
+  checkValidity(model, false);
+});
+
+test("#validate(context) should call #validate validator method", function() {
+  model.validateContext('fooValidations');
+  var ageErrorsKeys = model.get('validationErrors.age.keys');
+  deepEqual(ageErrorsKeys, ["isEmpty"], "should call #validateContext(context) validator method");
+});
+
+test("#validateContext(context) should set 'isValid' property to false when invalid", function() {
+  model.validateContext('fooValidations');
+  checkValidity(model, false);
+});
+
+test("#validateContext(context) should set 'isValid' property to true when valid", function() {
+  model.set('age', '12');
+  model.validateContext('fooValidations');
+  checkValidity(model, true);
+});
+
+test("#validateContext(context) should return false when invalid", function() {
+  equal(model.validateContext('fooValidations'), false, "should return false");
+});
+
+test("#validateContext(context) should return true when valid", function() {
+  model.set('age', '12');
+  equal(model.validateContext('fooValidations'), true, "should return true");
+});
+
+test("#validateContext(context) should remove previous errors", function() {
+  model.get('validationErrors').add('age', 'blank');
+  model.set('age', '12');
+  model.validateContext('fooValidations');
+  equal(model.get('validationErrors').get('length'), 0, "should have no error");
+});
+
+test("#validateContext(context) should notify validationErrors property changed", function() {
+  model.reopen({
+    observer: Ember.observer(function() {
+      ok(true, "errors has changed");
+    }, 'validationErrors')
+  });
+  model.validateContext('fooValidations');
   expect(1);
 });
 

@@ -106,6 +106,28 @@ Ember.Validations = Ember.Mixin.create(/**@scope Ember.Validations.prototype */{
   },
 
   /**
+     Method used to verify that the object is valid, according to the `validations`
+     hash.
+
+     @returns {Boolean} true if the object if valid
+  */
+  validateContext: function(context) {
+    var mainValidations = get(this, 'validations'),
+        errors = get(this, 'validationErrors');
+
+    if (Ember.isEmpty(context)) {
+      return this.validate();
+    }
+    
+    Ember.set(this, 'validations', this[context]);
+
+    var temp = this.validate();    
+    Ember.set(this, 'validations', mainValidations);
+
+    return temp;
+  },
+
+  /**
      Method used to verify that a property is valid, according to the `validations`
      hash.
 
