@@ -7,7 +7,9 @@ This library is inspired by the validations of the Ruby gem `ActiveRecord`.
 
 #### Getting ember-validations
 
-Currently you must build ember-validations yourself. Clone the repository, run `bundle` then `rake dist`. You'll find `ember-validations.js` in the `dist` directory.
+You can download a pre-built version in the `dist` directory
+
+To build the latest version: Clone the repository, run `bundle` then `rake dist`. You'll find `ember-validations.js` in the `dist` directory.
 
 ## Example
 
