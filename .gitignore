@@ -1,5 +1,4 @@
 tmp/
-dist/
 docs
 tests/ember-validations-tests.js
 .autotest
