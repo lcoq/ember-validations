@@ -259,9 +259,7 @@ Example:
 ```js
 password: {
   match: {
-    property: {
-      "confirmPassword"
-    }
+    property: "confirmPassword"
   }
 },
 confirmPassword: {
